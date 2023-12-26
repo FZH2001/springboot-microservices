@@ -1,5 +1,6 @@
 package com.example.fundtransferservice.model.entity;
 
+import com.example.fundtransferservice.model.TransactionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,12 @@ public class TransactionEntity {
     private String transactionReference;
     @Enumerated(EnumType.STRING)
     private TransactionStatus status;
+    @Enumerated(EnumType.STRING)
+    private TransactionType paymentType;
     private BigDecimal amount;
     private Date issueDate;
     private Date expiryDate;
     private String donorId;
     private String beneficiaryId;
+    private String agentId;
 }

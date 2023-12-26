@@ -1,6 +1,7 @@
 package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.model.TransactionStatus;
+import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionRequest;
 import com.example.fundtransferservice.model.dto.TransactionResponse;
@@ -10,10 +11,8 @@ import com.example.fundtransferservice.model.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +21,6 @@ import java.util.UUID;
 @Service
 public class TransferService {
     private final TransactionRepository transactionRepository;
-    private TransactionMapper mapper = new TransactionMapper();
     public TransactionResponse fundTransfer(TransactionRequest request) {
         log.info("Sending fund transfer request {}" + request.toString());
         TransactionEntity entity = new TransactionEntity();
@@ -34,7 +32,13 @@ public class TransferService {
         fundTransferResponse.setMessage("Success");
         return fundTransferResponse;
     }
-    public List<Transaction> readAllTransfers() {
-        return mapper.convertToDtoList(transactionRepository.findAll());
-    }
+
+        // Settle payment or block process
+    //TODO: COMMUNICATE WITH OTHER MICROSERVICE
+    //TODO : Display information about transfer
+    //TODO : Look up beneficiary by name for agent or GAB
+    //TODO : Look up beneficiary by Wallet code
+    //TODO : Sign a new client for Wallet account
+
+
 }

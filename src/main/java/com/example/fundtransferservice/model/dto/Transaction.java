@@ -10,6 +10,7 @@ public class Transaction {
     private Long id;
     private String transactionReference;
     private String status;
+    private String type;
     private BigDecimal amount;
     private Date issueDate;
     private Date expiryDate;
