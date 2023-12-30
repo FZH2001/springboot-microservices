@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Beneficiaire {
     @Id @GeneratedValue
-    private long id;
+    private Long id;
     private String nom;
     private String prenom;
     private String email;

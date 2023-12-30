@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Transaction {
     @Id @GeneratedValue
-    private  long id ;
+    private Long id ;
     private String ref;
     private Date transactionDate;
     private Double montant;

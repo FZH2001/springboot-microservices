@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Client {
     @Id @GeneratedValue
-    private long id;
+    private Long id;
     private String title;
     private String prenom;
     private String typePieceIdentite;
