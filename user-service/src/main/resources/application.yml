@@ -3,6 +3,17 @@ server:
 spring:
   application:
     name: userservice
+  jpa:
+    hibernate:
+      ddl-auto:
+        create
+  datasource:
+    url:
+      jdbc:mysql://localhost:3306/microservices_student
+    username:
+      root
+    password:
+      Massaq51354
 eureka:
   client:
     service-url:
