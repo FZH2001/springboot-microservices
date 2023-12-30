@@ -1,63 +1,19 @@
 package us.userservice.model.entity;
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Agent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue
     private long id;
-    @Column(name = "nom")
     private String nom;
-    @Column(name = "prenom")
     private String prenom;
-    @Column(name = "email")
     private String email;
-    @Column(name = "phone")
     private String phone;
 
-    public Agent(){
-
-    }
-    public Agent(String nom, String prenom, String email, String phone) {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.email = email;
-        this.phone = phone;
-    }
-    public long getId() {
-        return id;
-    }
-    public String getNom() {
-        return nom;
-    }
-
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

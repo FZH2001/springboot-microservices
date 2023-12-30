@@ -1,61 +1,22 @@
 package us.userservice.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue
     private  long id ;
-    @Column(name = "ref")
     private String ref;
-
-    public long getId() {
-        return id;
-    }
-
-    public Transaction(){
-
-    }
-
-    public Transaction(String ref, Date datetime, Double montant) {
-        this.ref = ref;
-        this.datetime = datetime;
-        this.montant = montant;
-    }
-
-    @Column(name = "datetime")
-    private Date datetime;
-    @Column(name = "montant")
+    private Date transactionDate;
     private Double montant;
-
-    public String getRef() {
-        return ref;
-    }
-
-    public void setRef(String ref) {
-        this.ref = ref;
-    }
-
-    public Date getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(Date datetime) {
-        this.datetime = datetime;
-    }
-
-    public Double getMontant() {
-        return montant;
-    }
-
-    public void setMontant(Double montant) {
-        this.montant = montant;
-    }
-
-
 
 
 }
