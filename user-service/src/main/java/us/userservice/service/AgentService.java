@@ -10,4 +10,5 @@ import us.userservice.repository.AgentRepository;
 @AllArgsConstructor
 public class AgentService {
     private final AgentRepository agentRepository;
+
 }
