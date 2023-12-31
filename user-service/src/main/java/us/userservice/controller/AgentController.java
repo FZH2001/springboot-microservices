@@ -1,5 +1,6 @@
 package us.userservice.controller;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/agents")
+@AllArgsConstructor
 public class AgentController {
     private final AgentService agentService;
 
-    public AgentController(AgentService agentService) {
-        this.agentService = agentService;
-    }
 
     @GetMapping("/clients")
     public ResponseEntity<List<Client>> getAllClients() {
