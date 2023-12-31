@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Agent {
+public class Agent{
     @Id @GeneratedValue
     private Long id;
     private String nom;
     private String prenom;
     private String email;
     private String phone;
+
 
 }

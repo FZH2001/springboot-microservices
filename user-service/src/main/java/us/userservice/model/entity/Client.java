@@ -29,4 +29,8 @@ public class Client {
     private String gsm;
     private String email;
 
+    @ManyToOne
+    private Agent agent ;
+
+
 }
