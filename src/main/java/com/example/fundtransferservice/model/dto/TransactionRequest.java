@@ -6,5 +6,9 @@ public class TransactionRequest {
     private String donorId;
     private String beneficiaryId;
     private BigDecimal amount;
+    private String whoPayFees;
+
+    private boolean isNotificationFees;
+    private double fraisTransfert;
     private String authID;
 }

@@ -1,0 +1,9 @@
+POST http://localhost:8084/api/v1/transaction/sendSMStoClient
+Content-Type: application/json
+
+{
+  "recipient": "212605809656",
+  "message": "This is a sample message",
+  "sender" : "Ismail"
+}
+###

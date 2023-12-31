@@ -24,9 +24,18 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private TransactionType paymentType;
     private BigDecimal amount;
+    private static final BigDecimal plafondMax = BigDecimal.valueOf(1000000);
     private Date issueDate;
     private Date expiryDate;
     private String donorId;
     private String beneficiaryId;
     private String agentId;
+
+    private boolean isNotificationFees;
+    private double fraisTransfert;
+    private String whoPayFees;
+
+    public Number getPlafond() {
+        return plafondMax;
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.fundtransferservice.controller;
 
+import com.example.fundtransferservice.model.dto.SMSRequest;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionRequest;
+import com.example.fundtransferservice.service.NotificationService;
 import com.example.fundtransferservice.service.TransferReverseService;
 import com.example.fundtransferservice.service.TransferSearchService;
 import com.example.fundtransferservice.service.TransferService;
@@ -9,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 import java.util.Map;
 
@@ -18,8 +22,10 @@ import java.util.Map;
 @RequestMapping("/api/v1/transaction")
 public class TransactionController {
     private final TransferSearchService transferSearchService;
+
     private final TransferService transferService;
     private final TransferReverseService transferReverseService;
+    private final NotificationService smsService;
     @PostMapping
     public ResponseEntity sendFundTransfer(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
@@ -62,5 +68,19 @@ public class TransactionController {
         return ResponseEntity.ok(transferReverseService.sendReverseRequest(referenceCode,refundMotive,agentId));
     }
 
+    @PostMapping("/sendSMStoClient")
+    public ResponseEntity<String> sendSMSToClient(@RequestBody SMSRequest smsRequestDTO) {
+        try {
+            smsService.sendSMStoClient(smsRequestDTO);
+            return ResponseEntity.ok("SMS sent successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to send SMS: " + Arrays.toString(e.getStackTrace()));
+        }
     }
 
+    @PostMapping("/SubmitTransaction")
+    public ResponseEntity calculateFees(@RequestBody TransactionRequest transactionRequest) {
+        log.info("Got fund transfer request from API {}", transactionRequest.toString());
+        return ResponseEntity.ok(transferService.validateSubmission(transactionRequest));
+    }
+}

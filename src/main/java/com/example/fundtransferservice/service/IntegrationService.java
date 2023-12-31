@@ -27,6 +27,11 @@ public class IntegrationService {
         //TODO : access agent info and update his credits
         // use this for extourne
     }
+
+    public void settleClientBalance(String clientId, BigDecimal fees){
+        //TODO : access client info and update his credits
+        // use this for Submit
+    }
     public void generateReceipt(String reference){
         try {
             receiptGeneratorService.createDocument();

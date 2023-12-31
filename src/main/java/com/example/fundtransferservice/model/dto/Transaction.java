@@ -12,6 +12,7 @@ public class Transaction {
     private String status;
     private String type;
     private BigDecimal amount;
+    private BigDecimal plafondMax;
     private Date issueDate;
     private Date expiryDate;
     private String donorId;
