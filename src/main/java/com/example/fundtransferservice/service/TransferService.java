@@ -33,12 +33,7 @@ public class TransferService {
         return fundTransferResponse;
     }
 
-        // Settle payment or block process
-    //TODO: COMMUNICATE WITH OTHER MICROSERVICE
-    //TODO : Display information about transfer
-    //TODO : Look up beneficiary by name for agent or GAB
-    //TODO : Look up beneficiary by Wallet code
-    //TODO : Sign a new client for Wallet account
+
 
 
 }
