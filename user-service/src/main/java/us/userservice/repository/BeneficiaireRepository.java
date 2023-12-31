@@ -14,5 +14,7 @@ public interface BeneficiaireRepository extends JpaRepository<Beneficiaire,Long>
     @Query("SELECT b FROM Beneficiaire b WHERE (b.nom LIKE %:term%) OR (b.prenom LIKE %:term%)")
     List<Beneficiaire> searchBeneficiaireByTerm(@Param("term") String term);
 
+    @Query("SELECT b.isBlockListed FROM Beneficiaire b WHERE b.id = :id")
+    Boolean isBeneficiaireBlockListed(@Param("id") Long id);
 
 }

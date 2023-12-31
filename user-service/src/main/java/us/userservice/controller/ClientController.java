@@ -23,6 +23,7 @@ public class ClientController {
     public Client getClientData(@PathVariable("id") Long id){
         return clientService.getClientData(id);
     }
+
     @PutMapping("/update")
     public Client updateClient(@RequestBody Client c){ return clientService.updateClient(c); }
 
@@ -34,4 +35,8 @@ public class ClientController {
     @GetMapping("/beneficiaire/search")
     public List<Beneficiaire> searchBeneficiaire(@RequestParam String term){ return clientService.searchBeneficiaireByTerm(term); }
 
+    @GetMapping("/beneficiaire/blocklisted/{id}")
+    public Boolean isBeneficiaireBlocklisted(@PathVariable Long id){
+        return clientService.isBeneficiaireBlacklisted(id);
+    }
 }

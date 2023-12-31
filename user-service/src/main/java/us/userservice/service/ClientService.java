@@ -3,8 +3,10 @@ package us.userservice.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Beneficiaire;
 import us.userservice.model.entity.Client;
+import us.userservice.repository.AgentRepository;
 import us.userservice.repository.BeneficiaireRepository;
 import us.userservice.repository.ClientRepository;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final BeneficiaireRepository beneficiaireRepository;
+    private final AgentRepository agentRepository;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 
@@ -44,11 +47,17 @@ public class ClientService {
     public List<Beneficiaire> searchBeneficiaireByTerm(String term){
         return beneficiaireRepository.searchBeneficiaireByTerm(term);
     }
+    public Boolean isBeneficiaireBlacklisted(Long id) {
+        return beneficiaireRepository.isBeneficiaireBlockListed(id);
+    }
 
 
 
     public String loadData(){
         try {
+            Agent a1 = new Agent(null,"Atlas","Abdelghafour","atlas@gmail.com","0600225588");
+            Agent a2 = new Agent(null,"Bekkari","Aissam","bekkari@gmail.com","0633336666");
+            agentRepository.saveAllAndFlush(List.of(a1,a2));
             Client c1 = Client.builder()
                     .gsm("0634348550")
                     .dateNaissance(sdf.parse("24-10-2001"))

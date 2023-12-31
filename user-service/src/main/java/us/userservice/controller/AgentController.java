@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.userservice.entity.Student;
+import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Client;
 import us.userservice.service.AgentService;
 
@@ -16,6 +17,20 @@ import java.util.List;
 public class AgentController {
     private final AgentService agentService;
 
+    @GetMapping("/get-agent-data/{id}")
+    public ResponseEntity<Agent> getAgentData(@PathVariable Long id){
+        return new ResponseEntity<>(agentService.getAgentData(id),HttpStatus.OK);
+    }
+    //Warning : This is not tested yet
+    @PutMapping("/update-data")
+    public ResponseEntity<String> updateAgentData(@RequestBody Agent a){
+        try{
+            agentService.updateData(a);
+            return new ResponseEntity<>("Agent updated successfully",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/clients")
     public ResponseEntity<List<Client>> getAllClients() {
@@ -54,6 +69,8 @@ public class AgentController {
         agentService.deleteClient(id);
         return new ResponseEntity<>("Client deleted successfully", HttpStatus.OK);
     }
+
+
 
 
 }
