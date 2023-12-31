@@ -36,4 +36,8 @@ public class Client {
     @OneToMany
     List<Beneficiaire> beneficiaires;
 
+    @ManyToOne
+    private Agent agent ;
+
+
 }
