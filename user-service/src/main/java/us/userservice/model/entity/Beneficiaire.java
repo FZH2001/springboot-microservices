@@ -16,5 +16,8 @@ public class Beneficiaire {
     private String prenom;
     private String email;
     private String phone;
+    private Boolean isBlockListed;
+    @ManyToOne
+    private Client client;
 
 }
