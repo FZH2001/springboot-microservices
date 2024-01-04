@@ -1,0 +1,25 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: internet-banking-fund-transfer-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
+    username: root
+    password: ismail
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
+info:
+  app:
+    name: ${spring.application.name}
+
+
+#infobip:
+#  api:
+#    key: "336a18ec0d02f481b32b3f49a34815fe-7af9e21e-c834-4a42-a0c1-a77dca6cdcd1"
+#    url: "https://3g6k51.api.infobip.com"
