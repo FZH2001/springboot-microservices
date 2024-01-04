@@ -2,15 +2,18 @@ package us.userservice.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Client {
     @Id @GeneratedValue
     private Long id;
@@ -28,5 +31,9 @@ public class Client {
     private String ville;
     private String gsm;
     private String email;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Agent agent;
+    @OneToMany
+    List<Beneficiaire> beneficiaires;
 
 }
