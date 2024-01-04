@@ -27,11 +27,13 @@ public class TransactionController {
     private final TransferService transferService;
     private final TransferReverseService transferReverseService;
     private final NotificationService smsService;
-    @PostMapping("/sendFundTransfer")
+
+    /*@PostMapping
+>>>>>>> 1d5d0170d56545c983952a25793ed198a21b354a
     public ResponseEntity sendFundTransfer(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.fundTransfer(transactionRequest));
-    }
+    }*/
     @GetMapping
     public ResponseEntity readFundTransfers() {
         log.info("Reading fund transfers from core");
@@ -61,13 +63,13 @@ public class TransactionController {
 
         return ResponseEntity.notFound().build();
     }
-    @PostMapping
+    /*@PostMapping
     public ResponseEntity sendRefundRequest(@RequestBody Map<String, String> requestParams) {
         String referenceCode = requestParams.get("referenceCode");
         String refundMotive = requestParams.get("motive");
         String agentId = requestParams.get("agentId");
         return ResponseEntity.ok(transferReverseService.sendReverseRequest(referenceCode,refundMotive,agentId));
-    }
+    }*/
 
     @PostMapping("/sendSMStoClient")
     public ResponseEntity<String> sendSMSToClient(@RequestBody SMSRequest smsRequestDTO) {
