@@ -27,7 +27,7 @@ public class TransactionController {
     private final TransferService transferService;
     private final TransferReverseService transferReverseService;
     private final NotificationService smsService;
-    @PostMapping
+    @PostMapping("/sendFundTransfer")
     public ResponseEntity sendFundTransfer(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.fundTransfer(transactionRequest));
@@ -44,7 +44,7 @@ public class TransactionController {
         return ResponseEntity.ok(transferSearchService.findTransactionByRefOnly(transactionReference));
     }
     // To get transaction by Wallet or GAB
-    @PostMapping
+    @PostMapping("/readFundTransfer")
     public ResponseEntity readFundTransaction(@RequestBody Map<String, String> requestParams) {
         log.info("Searching for transaction by reference code and SMS code");
 
