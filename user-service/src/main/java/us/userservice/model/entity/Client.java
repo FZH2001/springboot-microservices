@@ -33,6 +33,7 @@ public class Client {
     private String email;
     @ManyToOne(fetch = FetchType.EAGER)
     private Agent agent;
+    private Double solde;
     @OneToMany
     List<Beneficiaire> beneficiaires;
 
