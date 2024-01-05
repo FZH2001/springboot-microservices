@@ -47,8 +47,8 @@ public class TransferReverseService {
             return null;
         }
         transactionEntity.setStatus(TransactionStatus.REVERSED);
-        integrationService.updateAgentCredits(agentId,transactionEntity.getAmount(),"increment");
-        integrationService.generateReceipt(referenceCode);
+        integrationService.updateAgentCredits(agentId,transactionEntity.getAmount()+transactionEntity.getFraisTransfert(),"increment");
+        //integrationService.generateReceipt(referenceCode);
         transactionRepository.save(transactionEntity);
        return utils.buildSuccessfulTransactionResponse(transactionEntity);
 
