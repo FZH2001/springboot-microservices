@@ -6,9 +6,11 @@ import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionRequest;
 import com.example.fundtransferservice.model.dto.TransactionResponse;
+import com.example.fundtransferservice.model.dto.Utils;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
+import com.example.fundtransferservice.model.rest.response.AgentResponse;
 import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class TransferService {
     private final TransactionRepository transactionRepository;
     private final FeesCalculationService feesCalculationService;
     private final FundTransferRestClient fundTransferRestClient;
+    private final Utils utils;
     private TransactionMapper mapper = new TransactionMapper();
 
 
@@ -41,32 +44,37 @@ public class TransferService {
         fundTransferResponse.setMessage("Success");
         return fundTransferResponse;
     }
-    public List<Transaction> readAllTransfers() {
-        return mapper.convertToDtoList(transactionRepository.findAll());
-    }
 
 
     public TransactionResponse  validateSubmission(TransactionRequest request){
 
         // ? : checks if amount is greater than plafond
-        TransactionEntity entity = new TransactionEntity();
-
-        BeanUtils.copyProperties(request,entity);
-        ClientResponse clientResponse = fundTransferRestClient.getClientInfo(entity.getDonorId());
-
+        TransactionEntity transactionEntity = new TransactionEntity();
+        BeanUtils.copyProperties(request,transactionEntity);
+        ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transactionEntity.getDonorId());
+        AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(transactionEntity.getAgentId());
+        transactionEntity.setTransactionReference(UUID.randomUUID().toString());
         TransactionResponse response = new TransactionResponse();
-        if(entity.getAmount() < entity.getPlafond().doubleValue()){
-            response.setMessage("Amount is greater than plafond");
-            response.setTransactionId(UUID.randomUUID().toString());
+        if(transactionEntity.getAmount() < transactionEntity.getPlafond().doubleValue()){
+            response=utils.buildFailedTransactionResponse(transactionEntity.getTransactionReference(),"Amount is greater than plafond");
         }
         // TODO :  check if amount is greater than Client Balance ( for Mobile and Debit de Compte )
+        else if((transactionEntity.getPaymentType().equals(TransactionType.WALLET)
+                || transactionEntity.getPaymentType().equals(TransactionType.GAB)) && transactionEntity.getAmount()>clientResponse.getSolde()){
+            response=utils.buildFailedTransactionResponse(transactionEntity.getTransactionReference(),"Amount is greater than what donor has");
+
+        }
         // TODO : check if amount is greater than Agent Balance ( for CASH )
+        else if(transactionEntity.getPaymentType().equals(TransactionType.CASH)
+                && transactionEntity.getAmount()>agentResponse.getSolde()){
+            response=utils.buildFailedTransactionResponse(transactionEntity.getTransactionReference(),"Amount is greater than what agent has");
+        }
+
         else{
             // ? : if the amount is valid then we proceed with Fees calculation
-            feesCalculation(entity);
-
-            response.setMessage("Success");
-            response.setTransactionId(UUID.randomUUID().toString());
+            feesCalculation(transactionEntity);
+            transactionRepository.save(transactionEntity);
+            response=utils.buildSuccessfulTransactionResponse(transactionEntity);
         }
 
         return response;
