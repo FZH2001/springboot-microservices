@@ -1,8 +1,11 @@
 package com.example.fundtransferservice.service;
 
+import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.TransactionStatus;
 import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.Transaction;
+import com.example.fundtransferservice.model.dto.TransactionResponse;
+import com.example.fundtransferservice.model.dto.Utils;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
@@ -14,26 +17,40 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class TransferValidationService {
-    private final TransactionMapper mapper = new TransactionMapper();
     private final TransactionRepository transactionRepository;
     private final IntegrationService integrationService;
-    public Transaction validatePayment(String reference){
+    private final Utils utils;
+
+    public TransactionResponse validatePayment(String reference){
 
         TransactionEntity transactionEntity =transactionRepository.findByTransactionReference(reference);
         if(transactionEntity!=null){
-            if(integrationService.isBeneficiaryBlocked(transactionEntity.getBeneficiaryId()) ||
-                    (transactionEntity.getPaymentType().equals(TransactionType.GAB) && integrationService.isGabEmpty())){
-                log.error("Payment is blocked");
+            if(integrationService.isBeneficiaryBlocked(transactionEntity.getBeneficiaryId())
+                    || (transactionEntity.getPaymentType().equals(TransactionType.GAB) && integrationService.isGabEmpty())
+                    || transactionEntity.getStatus().equals(TransactionStatus.PAID)
+                    || transactionEntity.getStatus().equals(TransactionStatus.BLOCKED)){
+
+                log.info("Payment is blocked");
                 transactionEntity.setStatus(TransactionStatus.BLOCKED);
                 transactionRepository.save(transactionEntity);
+                return utils.buildFailedTransactionResponse(reference,"Payment is blocked");
             }
             else {
-                log.error("Payment is settled");
+                log.info("Payment is settled");
+                integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement");
                 transactionEntity.setStatus(TransactionStatus.PAID);
                 transactionRepository.save(transactionEntity);
+                integrationService.generateReceipt(reference);
+                return utils.buildSuccessfulTransactionResponse(transactionEntity);
             }
         }
-        return mapper.convertToDto(transactionEntity);
+        else {
+            return utils.buildFailedTransactionResponse(reference,"Transaction not found");
+        }
+    }
+
+    public void updateAgentCredits(){
+
     }
 
 }

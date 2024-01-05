@@ -1,5 +1,7 @@
 package com.example.fundtransferservice.service;
 
+import com.example.fundtransferservice.client.FundTransferRestClient;
+import com.example.fundtransferservice.model.rest.response.AgentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,10 @@ import java.math.BigDecimal;
 @Service
 public class IntegrationService {
     public final ReceiptGeneratorService receiptGeneratorService;
-    public boolean isBeneficiaryBlocked(String Id){
-        //TODO: Check SIRON microservice for beneficiary status
-        return false;
+    private final FundTransferRestClient fundTransferRestClient;
+
+    public boolean isBeneficiaryBlocked(Long id) {
+        return fundTransferRestClient.isBeneficiaryBlacklisted(id);
     }
     public boolean isGabEmpty(){
         return false;
@@ -23,10 +26,19 @@ public class IntegrationService {
         //TODO
         return false;
     }
-    public void settleAgentCredit(String agentId, BigDecimal amount){
-        //TODO : access agent info and update his credits
-        // use this for extourne
+    public void updateAgentCredits(Long agentId, double amount, String operation){
+        AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(agentId);
+        // find agent to update
+        if(operation.equals("increment")) {
+            agentResponse.setSolde(agentResponse.getSolde()+amount);
+        }
+        else {
+            agentResponse.setSolde(agentResponse.getSolde()-amount);
+        }
+        fundTransferRestClient.updateAgentCredits(agentResponse);
+
     }
+
 
     public void settleClientBalance(String clientId, BigDecimal fees){
         //TODO : access client info and update his credits
@@ -44,7 +56,6 @@ public class IntegrationService {
     // Settle payment or block process
     //TODO : Look up beneficiary by name for agent or GAB
     //TODO : Look up beneficiary by Wallet code
-    //TODO: Check beneficiary status ( is it blacklisted ? )
     //TODO : Sign a new client for Wallet account
     //TODO : access agent info and update his credits
 

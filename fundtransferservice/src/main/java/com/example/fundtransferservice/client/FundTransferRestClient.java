@@ -25,6 +25,10 @@ public interface FundTransferRestClient {
     // Look up beneficiary by his wallet code
     @RequestMapping(method = RequestMethod.POST, value = "/api/beneficiary/get-beneficiary-data")
     BeneficiaryResponse getBeneficiaryInfoByCode(@RequestBody Map<String, Object> requestParams);
+    @RequestMapping(method = RequestMethod.POST, value = "/api/client/beneficiaire/blocklisted/{id}")
+    Boolean isBeneficiaryBlacklisted(@PathVariable Long id);
+    @RequestMapping(method = RequestMethod.POST, value = "/api/agents/update-agent-solde/{id}")
+    String updateAgentCredits(@RequestBody AgentResponse agentResponse);
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/client" +

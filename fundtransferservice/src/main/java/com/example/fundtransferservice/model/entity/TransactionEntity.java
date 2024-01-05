@@ -23,7 +23,7 @@ public class TransactionEntity {
     private TransactionStatus status;
     @Enumerated(EnumType.STRING)
     private TransactionType paymentType;
-    private BigDecimal amount;
+    private double amount;
     private static final BigDecimal plafondMax = BigDecimal.valueOf(1000000);
     private Date issueDate;
     private Date expiryDate;

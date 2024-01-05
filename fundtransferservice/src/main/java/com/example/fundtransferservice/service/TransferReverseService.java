@@ -3,7 +3,6 @@ package com.example.fundtransferservice.service;
 import com.example.fundtransferservice.model.TransactionStatus;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
-import com.example.fundtransferservice.model.mapper.BaseMapper;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class TransferReverseService {
     private final TransactionRepository transactionRepository;
     private final IntegrationService integrationService;
     private final TransactionMapper mapper = new TransactionMapper();
-    public Transaction sendReverseRequest(String referenceCode, String refundMotive, String agentId) {
+    public Transaction sendReverseRequest(String referenceCode, String refundMotive, Long agentId) {
         TransactionEntity transactionEntity = transactionRepository.findByTransactionReference(referenceCode);
         if(transactionEntity==null && refundMotive.isEmpty()){
             log.error("Transfer not found or motive is empty");
@@ -36,7 +35,7 @@ public class TransferReverseService {
             return null;
         }
         transactionEntity.setStatus(TransactionStatus.REVERSED);
-        integrationService.settleAgentCredit(agentId,transactionEntity.getAmount());
+        integrationService.updateAgentCredits(agentId,transactionEntity.getAmount(),"increment");
         integrationService.generateReceipt(referenceCode);
         return mapper.convertToDto(transactionEntity);
 

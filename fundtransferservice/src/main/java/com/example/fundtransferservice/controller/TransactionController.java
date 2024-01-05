@@ -5,10 +5,7 @@ import com.example.fundtransferservice.model.dto.SMSRequest;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionRequest;
 import com.example.fundtransferservice.model.dto.TransactionResponse;
-import com.example.fundtransferservice.service.NotificationService;
-import com.example.fundtransferservice.service.TransferReverseService;
-import com.example.fundtransferservice.service.TransferSearchService;
-import com.example.fundtransferservice.service.TransferService;
+import com.example.fundtransferservice.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,11 +25,16 @@ public class TransactionController {
     private final TransferSearchService transferSearchService;
     private final TransferService transferService;
     private final TransferReverseService transferReverseService;
+    private final TransferValidationService transferValidationService;
     private final NotificationService smsService;
     @GetMapping
-    public ResponseEntity readFundTransfers() {
+    public ResponseEntity<List<Transaction>> readFundTransfers() {
         log.info("Reading fund transfers from core");
         return ResponseEntity.ok(transferSearchService.readAllTransfers());
+    }
+    @GetMapping("/agent/validate/{transactionReference}")
+    public ResponseEntity<TransactionResponse> validatePayment(@PathVariable String transactionReference){
+        return ResponseEntity.ok(transferValidationService.validatePayment(transactionReference));
     }
     // To get transaction by agent
     @GetMapping("/agent/{transactionReference}")
