@@ -17,7 +17,6 @@ public class Beneficiaire {
     private String email;
     private String phone;
     private Boolean isBlockListed;
-
     private String walletCode;
     @ManyToOne
     private Client client;
