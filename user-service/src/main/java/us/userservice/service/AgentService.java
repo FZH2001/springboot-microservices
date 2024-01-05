@@ -36,13 +36,11 @@ public class AgentService {
         clientRepository.save(client);
     }
     public void updateClient(Client client, Long clientId) {
-        // Vérifie si le client existe
+
         if (clientRepository.existsById(clientId)) {
-            // Met à jour le client
             client.setId(clientId);
             clientRepository.save(client);
         } else {
-            // Le client n'existe pas, vous pouvez gérer cela en levant une exception, par exemple
             throw new EntityNotFoundException("Client not found with ID: " + clientId);
         }
     }
@@ -52,5 +50,16 @@ public class AgentService {
     }
     public Agent updateData(Agent a){
         return agentRepository.saveAndFlush(a);
+    }
+    public void updateAgentSolde(Long agentId, Double newSolde) {
+
+        Agent agent = agentRepository.findById(agentId).orElse(null);
+
+        if (agent != null) {
+            agent.setSolde(newSolde);
+            agentRepository.save(agent);
+        } else {
+            throw new EntityNotFoundException("Agent not found with ID: " + agentId);
+        }
     }
 }

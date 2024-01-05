@@ -15,6 +15,6 @@ public class Agent{
     private String prenom;
     private String email;
     private String phone;
-
+    private Double solde;
 
 }
