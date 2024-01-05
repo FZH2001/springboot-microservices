@@ -79,7 +79,7 @@ public class TransactionController {
     }
 
     @PostMapping("/SubmitTransaction")
-    public ResponseEntity calculateFees(@RequestBody TransactionRequest transactionRequest) {
+    public ResponseEntity<TransactionResponse> calculateFees(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.validateSubmission(transactionRequest));
     }
