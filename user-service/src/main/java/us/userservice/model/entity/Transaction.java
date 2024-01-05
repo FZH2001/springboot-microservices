@@ -17,6 +17,8 @@ public class Transaction {
     private String ref;
     private Date transactionDate;
     private Double montant;
+    @OneToOne
+    private Beneficiaire beneficiaire;
 
 
 }
