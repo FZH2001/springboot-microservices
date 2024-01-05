@@ -62,7 +62,9 @@ public class ClientService {
             throw new EntityNotFoundException("Client not found with ID: " + clientId);
         }
     }
-
+    public void saveOrUpdateClient(Client client) {
+        clientRepository.save(client);
+    }
 
 
     public String loadData(){
@@ -121,8 +123,10 @@ public class ClientService {
             clientRepository.saveAll(List.of(c1,c2,c3));
             clientRepository.flush();
             Client client = clientRepository.findByPrenom("Hamza").orElse(null);
-            Beneficiaire b1 = new Beneficiaire(null,"ELGARAI","Karim","karimeg@yahoo.fr","0632579630",false,"TX0001",client);
-            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail..com","0735903682",false,"TX0002",client);
+
+            Beneficiaire b1 = new Beneficiaire(null,"ELGARAI","Karim","karimeg@yahoo.fr","0632579630",false,"hxxx23",client);
+            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail..com","0735903682",false,"xx34rr",client);
+
             beneficiaireRepository.saveAllAndFlush(List.of(b1,b2));
 
 
