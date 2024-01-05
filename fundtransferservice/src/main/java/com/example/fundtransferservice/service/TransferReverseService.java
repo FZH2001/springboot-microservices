@@ -2,14 +2,19 @@ package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.model.TransactionStatus;
 import com.example.fundtransferservice.model.dto.Transaction;
+import com.example.fundtransferservice.model.dto.TransactionResponse;
+import com.example.fundtransferservice.model.dto.Utils;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -17,18 +22,25 @@ import java.time.LocalDate;
 public class TransferReverseService {
     private final TransactionRepository transactionRepository;
     private final IntegrationService integrationService;
-    private final TransactionMapper mapper = new TransactionMapper();
-    public Transaction sendReverseRequest(String referenceCode, String refundMotive, Long agentId) {
+    private final Utils utils;
+    public TransactionResponse sendReverseRequest(String referenceCode, String refundMotive, Long agentId) {
         TransactionEntity transactionEntity = transactionRepository.findByTransactionReference(referenceCode);
-        if(transactionEntity==null && refundMotive.isEmpty()){
+        LocalDate issueLocalDate = transactionEntity.getIssueDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate today = LocalDate.now();
+        boolean isSameDay = (issueLocalDate.getDayOfMonth() == today.getDayOfMonth()) &&
+                (issueLocalDate.getMonth() == today.getMonth()) &&
+                (issueLocalDate.getYear() == today.getYear());
+        if(transactionEntity==null || refundMotive.isEmpty()){
             log.error("Transfer not found or motive is empty");
-            return null;
+            return utils.buildFailedTransactionResponse(referenceCode,"transfer not found or motive is empty");
         }
-        else if(!transactionEntity.getIssueDate().equals(LocalDate.now())
-                || transactionEntity.getStatus().equals(TransactionStatus.PAID)
-                || transactionEntity.getStatus().equals(TransactionStatus.BLOCKED) ){
+        else if(!isSameDay || transactionEntity.getStatus().equals(TransactionStatus.PAID)
+                || transactionEntity.getStatus().equals(TransactionStatus.BLOCKED)
+                || transactionEntity.getStatus().equals(TransactionStatus.REVERSED)){
             log.error("It's too late now son , too late");
-            return null;
+            return utils.buildFailedTransactionResponse(referenceCode,"time for reverse has expired");
         }
         else if(!transactionEntity.getAgentId().equals(agentId)){
             log.error("Find your agent son , this ain't the one");
@@ -37,7 +49,9 @@ public class TransferReverseService {
         transactionEntity.setStatus(TransactionStatus.REVERSED);
         integrationService.updateAgentCredits(agentId,transactionEntity.getAmount(),"increment");
         integrationService.generateReceipt(referenceCode);
-        return mapper.convertToDto(transactionEntity);
+        transactionRepository.save(transactionEntity);
+       return utils.buildSuccessfulTransactionResponse(transactionEntity);
+
 
     }
 }

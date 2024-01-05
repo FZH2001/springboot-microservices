@@ -31,9 +31,9 @@ public class DataLoader implements CommandLineRunner {
             transaction.setAmount(random.nextInt(1000) + 100); // Random amount between 100 and 1100
             transaction.setIssueDate(new Date());
             transaction.setExpiryDate(new Date()); // You can adjust this
-            transaction.setDonorId((long) random.nextInt(1000)); // Random Long for donorId
-            transaction.setBeneficiaryId((long) random.nextInt(1000)); // Random Long for beneficiaryId
-            transaction.setAgentId((long) random.nextInt(1000));
+            transaction.setDonorId(1L); // Random Long for donorId
+            transaction.setBeneficiaryId(1L); // Random Long for beneficiaryId
+            transaction.setAgentId(1L);
             transaction.setNotificationFees(random.nextBoolean());
             transaction.setFraisTransfert(random.nextDouble() * 15); // Random fees up to 15
             transaction.setWhoPayFees(random.nextBoolean() ? "Donor" : "Beneficiary");

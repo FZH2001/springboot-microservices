@@ -32,6 +32,7 @@ public class TransactionController {
         log.info("Reading fund transfers from core");
         return ResponseEntity.ok(transferSearchService.readAllTransfers());
     }
+    // TODO : send and verify OTP
     @GetMapping("/agent/validate/{transactionReference}")
     public ResponseEntity<TransactionResponse> validatePayment(@PathVariable String transactionReference){
         return ResponseEntity.ok(transferValidationService.validatePayment(transactionReference));
@@ -60,13 +61,13 @@ public class TransactionController {
 
         return ResponseEntity.notFound().build();
     }
-    /*@PostMapping
-    public ResponseEntity sendRefundRequest(@RequestBody Map<String, String> requestParams) {
+    @PostMapping("/agent/reverse")
+    public ResponseEntity<TransactionResponse> sendReverseRequest(@RequestBody Map<String, String> requestParams) {
         String referenceCode = requestParams.get("referenceCode");
         String refundMotive = requestParams.get("motive");
-        String agentId = requestParams.get("agentId");
+        Long agentId = Long.valueOf(requestParams.get("agentId"));
         return ResponseEntity.ok(transferReverseService.sendReverseRequest(referenceCode,refundMotive,agentId));
-    }*/
+    }
 
     @PostMapping("/sendSMStoClient")
     public ResponseEntity<String> sendSMSToClient(@RequestBody SMSRequest smsRequestDTO) {

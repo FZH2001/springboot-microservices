@@ -2,6 +2,7 @@ package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.rest.response.AgentResponse;
+import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,14 +29,15 @@ public class IntegrationService {
     }
     public void updateAgentCredits(Long agentId, double amount, String operation){
         AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(agentId);
+        double newAgentSolde = agentResponse.getSolde();
         // find agent to update
         if(operation.equals("increment")) {
-            agentResponse.setSolde(agentResponse.getSolde()+amount);
+            newAgentSolde+=amount;
         }
-        else {
-            agentResponse.setSolde(agentResponse.getSolde()-amount);
+        else if(operation.equals("decrement")){
+            newAgentSolde-=amount;
         }
-        fundTransferRestClient.updateAgentCredits(agentResponse);
+        fundTransferRestClient.updateAgentCredits(agentId,newAgentSolde);
 
     }
 
@@ -44,6 +46,11 @@ public class IntegrationService {
         //TODO : access client info and update his credits
         // use this for Submit
     }
+        public void createNewClient(ClientResponse clientResponse){
+            //TODO : Sign a new client for Wallet account
+        //fundTransferRestClient.createNewClient(clientResponse);
+        }
+
     public void generateReceipt(String reference){
         try {
             receiptGeneratorService.createDocument();
@@ -52,11 +59,7 @@ public class IntegrationService {
         catch(FileNotFoundException fileNotFoundException){
             log.error(fileNotFoundException.getMessage());
         }
-        }
-    // Settle payment or block process
-    //TODO : Look up beneficiary by name for agent or GAB
-    //TODO : Look up beneficiary by Wallet code
-    //TODO : Sign a new client for Wallet account
-    //TODO : access agent info and update his credits
+    }
+
 
 }

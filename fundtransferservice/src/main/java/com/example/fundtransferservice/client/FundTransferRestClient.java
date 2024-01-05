@@ -10,7 +10,7 @@ import java.util.Map;
 
 @FeignClient(name ="userservice")
 public interface FundTransferRestClient {
-    @RequestMapping(method = RequestMethod.GET, value = "/api/agent/get-agent-data/{id}/")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/agents/get-agent-data/{id}")
     AgentResponse getAgentInfo(@PathVariable("id") Long agentId);
     @RequestMapping(method = RequestMethod.GET, value = "/api/client/get-client-data/{id}")
     ClientResponse getClientInfo(@PathVariable("id") Long donorId);
@@ -25,10 +25,10 @@ public interface FundTransferRestClient {
     // Look up beneficiary by his wallet code
     @RequestMapping(method = RequestMethod.POST, value = "/api/beneficiary/get-beneficiary-data")
     BeneficiaryResponse getBeneficiaryInfoByCode(@RequestBody Map<String, Object> requestParams);
-    @RequestMapping(method = RequestMethod.POST, value = "/api/client/beneficiaire/blocklisted/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/client/beneficiaire/blocklisted/{id}")
     Boolean isBeneficiaryBlacklisted(@PathVariable Long id);
-    @RequestMapping(method = RequestMethod.POST, value = "/api/agents/update-agent-solde/{id}")
-    String updateAgentCredits(@RequestBody AgentResponse agentResponse);
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/agents/update-agent-solde/{id}")
+    String updateAgentCredits(@PathVariable Long id,@RequestParam Double newSolde);
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/client" +
@@ -36,5 +36,4 @@ public interface FundTransferRestClient {
     String loadData();
 
     //TODO : Sign a new client for Wallet account
-    //TODO : access agent info and update his credits
 }
