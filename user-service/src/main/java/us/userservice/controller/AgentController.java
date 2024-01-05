@@ -69,6 +69,15 @@ public class AgentController {
         agentService.deleteClient(id);
         return new ResponseEntity<>("Client deleted successfully", HttpStatus.OK);
     }
+    @PutMapping("/update-agent-solde/{id}")
+    public ResponseEntity<String> updateAgentSolde(@PathVariable Long id, @RequestParam Double newSolde) {
+        try {
+            agentService.updateAgentSolde(id, newSolde);
+            return new ResponseEntity<>("Agent solde updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 

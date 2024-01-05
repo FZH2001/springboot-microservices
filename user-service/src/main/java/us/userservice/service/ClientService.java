@@ -1,5 +1,6 @@
 package us.userservice.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -50,13 +51,22 @@ public class ClientService {
     public Boolean isBeneficiaireBlacklisted(Long id) {
         return beneficiaireRepository.isBeneficiaireBlockListed(id);
     }
+    public void updateClientSolde(Long clientId, Double newSolde) {
+        Client client = clientRepository.findById(clientId).orElse(null);
+        if (client != null) {
+            client.setSolde(newSolde);
+            clientRepository.save(client);
+        } else {
+            throw new EntityNotFoundException("Client not found with ID: " + clientId);
+        }
+    }
 
 
 
     public String loadData(){
         try {
-            Agent a1 = new Agent(null,"Atlas","Abdelghafour","atlas@gmail.com","0600225588");
-            Agent a2 = new Agent(null,"Bekkari","Aissam","bekkari@gmail.com","0633336666");
+            Agent a1 = new Agent(null,"Atlas","Abdelghafour","atlas@gmail.com","0600225588",5000.00);
+            Agent a2 = new Agent(null,"Bekkari","Aissam","bekkari@gmail.com","0633336666",5555.00);
             agentRepository.saveAllAndFlush(List.of(a1,a2));
             Client c1 = Client.builder()
                     .gsm("0634348550")

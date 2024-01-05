@@ -1,6 +1,8 @@
 package us.userservice.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.userservice.model.entity.Beneficiaire;
 import us.userservice.model.entity.Client;
@@ -39,4 +41,14 @@ public class ClientController {
     public Boolean isBeneficiaireBlocklisted(@PathVariable Long id){
         return clientService.isBeneficiaireBlacklisted(id);
     }
+    @PutMapping("/update-client-solde/{id}")
+    public ResponseEntity<String> updateClientSolde(@PathVariable Long id, @RequestParam Double newSolde) {
+        try {
+            clientService.updateClientSolde(id, newSolde);
+            return new ResponseEntity<>("Client solde updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

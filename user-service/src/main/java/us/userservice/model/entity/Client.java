@@ -35,6 +35,7 @@ public class Client {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Agent agent;
+    private Double solde;
     @JsonIgnore
     @OneToMany
     List<Beneficiaire> beneficiaires;
