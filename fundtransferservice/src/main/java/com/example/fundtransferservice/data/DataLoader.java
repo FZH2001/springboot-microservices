@@ -28,7 +28,7 @@ public class DataLoader implements CommandLineRunner {
             transaction.setTransactionReference("TXN" + String.format("%06d", i));
             transaction.setStatus(TransactionStatus.values()[random.nextInt(TransactionStatus.values().length)]);
             transaction.setPaymentType(TransactionType.values()[random.nextInt(TransactionType.values().length)]);
-            transaction.setAmount(new BigDecimal(random.nextInt(1000) + 100)); // Random amount between 100 and 1100
+            transaction.setAmount(random.nextInt(1000) + 100); // Random amount between 100 and 1100
             transaction.setIssueDate(new Date());
             transaction.setExpiryDate(new Date()); // You can adjust this
             transaction.setDonorId((long) random.nextInt(1000)); // Random Long for donorId

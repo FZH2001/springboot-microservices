@@ -24,4 +24,5 @@ public class Beneficiaire {
     @JsonIgnore
     private Client client;
 
+
 }

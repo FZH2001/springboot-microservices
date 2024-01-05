@@ -49,7 +49,7 @@ public class TransferService {
         TransactionEntity entity = new TransactionEntity();
         BeanUtils.copyProperties(request,entity);
         TransactionResponse response = new TransactionResponse();
-        if(entity.getAmount().doubleValue() > entity.getPlafond().doubleValue()){
+        if(entity.getAmount() < entity.getPlafond().doubleValue()){
             response.setMessage("Amount is greater than plafond");
             response.setTransactionId(UUID.randomUUID().toString());
         }
@@ -69,13 +69,13 @@ public class TransferService {
 
     public void feesCalculation(TransactionEntity entity){
         if(entity.getWhoPayFees().equals("donor")){
-            feesCalculationService.calculFraisDonneurOrdre(entity.getAmount().doubleValue(),entity.getFraisTransfert(),entity.isNotificationFees());
+            feesCalculationService.calculFraisDonneurOrdre(entity.getAmount(),entity.getFraisTransfert(),entity.isNotificationFees());
         }
         else if(entity.getWhoPayFees().equals("beneficiary")){
-            feesCalculationService.calculFraisBeneficiaire(entity.getAmount().doubleValue(),entity.getFraisTransfert(),entity.isNotificationFees());
+            feesCalculationService.calculFraisBeneficiaire(entity.getAmount(),entity.getFraisTransfert(),entity.isNotificationFees());
         }
         else if(entity.getWhoPayFees().equals("shared")){
-            feesCalculationService.calculFraisPartages(entity.getAmount().doubleValue(),entity.getFraisTransfert(),entity.isNotificationFees());
+            feesCalculationService.calculFraisPartages(entity.getAmount(),entity.getFraisTransfert(),entity.isNotificationFees());
         }
     }
 
