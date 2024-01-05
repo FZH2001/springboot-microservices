@@ -1,8 +1,10 @@
 package com.example.fundtransferservice.controller;
 
+import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.dto.SMSRequest;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionRequest;
+import com.example.fundtransferservice.model.dto.TransactionResponse;
 import com.example.fundtransferservice.service.NotificationService;
 import com.example.fundtransferservice.service.TransferReverseService;
 import com.example.fundtransferservice.service.TransferSearchService;
@@ -23,17 +25,9 @@ import java.util.Map;
 @RequestMapping("/api/v1/transaction")
 public class TransactionController {
     private final TransferSearchService transferSearchService;
-
     private final TransferService transferService;
     private final TransferReverseService transferReverseService;
     private final NotificationService smsService;
-
-    /*@PostMapping
->>>>>>> 1d5d0170d56545c983952a25793ed198a21b354a
-    public ResponseEntity sendFundTransfer(@RequestBody TransactionRequest transactionRequest) {
-        log.info("Got fund transfer request from API {}", transactionRequest.toString());
-        return ResponseEntity.ok(transferService.fundTransfer(transactionRequest));
-    }*/
     @GetMapping
     public ResponseEntity readFundTransfers() {
         log.info("Reading fund transfers from core");
@@ -41,23 +35,23 @@ public class TransactionController {
     }
     // To get transaction by agent
     @GetMapping("/agent/{transactionReference}")
-    public ResponseEntity readFundTransaction(@PathVariable String transactionReference) {
+    public ResponseEntity<TransactionResponse> readFundTransaction(@PathVariable String transactionReference) {
         log.info("Reading fund transfers from core");
         return ResponseEntity.ok(transferSearchService.findTransactionByRefOnly(transactionReference));
     }
     // To get transaction by Wallet or GAB
     @PostMapping("/readFundTransfer")
-    public ResponseEntity readFundTransaction(@RequestBody Map<String, String> requestParams) {
+    public ResponseEntity<TransactionResponse> readFundTransaction(@RequestBody Map<String, String> requestParams) {
         log.info("Searching for transaction by reference code and SMS code");
 
         String referenceCode = requestParams.get("referenceCode");
         String smsCode = requestParams.get("smsCode");
 
         if (referenceCode != null && smsCode != null) {
-            Transaction transaction = transferSearchService.findTransactionByCode(referenceCode, smsCode);
+            TransactionResponse transactionResponse = transferSearchService.findTransactionByCode(referenceCode, smsCode);
 
-            if (transaction != null) {
-                return ResponseEntity.ok(transaction);
+            if (transactionResponse != null) {
+                return ResponseEntity.ok(transactionResponse);
             }
         }
 

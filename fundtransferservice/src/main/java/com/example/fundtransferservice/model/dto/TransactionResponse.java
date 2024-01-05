@@ -7,4 +7,5 @@ import java.math.BigDecimal;
 public class TransactionResponse {
     private String message;
     private String transactionId;
+    private Transaction transaction;
 }

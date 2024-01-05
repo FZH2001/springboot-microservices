@@ -1,5 +1,6 @@
 package us.userservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class Beneficiaire {
     private String phone;
     private Boolean isBlockListed;
     @ManyToOne
+    @JsonIgnore
     private Client client;
 
 }

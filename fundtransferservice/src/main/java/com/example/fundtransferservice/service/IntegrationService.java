@@ -42,7 +42,6 @@ public class IntegrationService {
         }
         }
     // Settle payment or block process
-    //TODO: COMMUNICATE WITH OTHER MICROSERVICE
     //TODO : Look up beneficiary by name for agent or GAB
     //TODO : Look up beneficiary by Wallet code
     //TODO: Check beneficiary status ( is it blacklisted ? )

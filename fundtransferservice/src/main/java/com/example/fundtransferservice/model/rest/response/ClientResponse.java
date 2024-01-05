@@ -1,22 +1,14 @@
-package us.userservice.model.entity;
+package com.example.fundtransferservice.model.rest.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
-
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Client {
-    @Id @GeneratedValue
+public class ClientResponse {
     private Long id;
     private String title;
     private String prenom;
@@ -32,11 +24,6 @@ public class Client {
     private String ville;
     private String gsm;
     private String email;
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Agent agent;
-    @JsonIgnore
-    @OneToMany
-    List<Beneficiaire> beneficiaires;
-
+    private AgentResponse agentResponse;
+    private List<BeneficiaryResponse> beneficiaires;
 }

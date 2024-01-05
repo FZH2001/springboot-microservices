@@ -27,10 +27,9 @@ public class TransactionEntity {
     private static final BigDecimal plafondMax = BigDecimal.valueOf(1000000);
     private Date issueDate;
     private Date expiryDate;
-    private String donorId;
-    private String beneficiaryId;
-    private String agentId;
-
+    private Long donorId;
+    private Long beneficiaryId;
+    private Long agentId;
     private boolean isNotificationFees;
     private double fraisTransfert;
     private String whoPayFees;

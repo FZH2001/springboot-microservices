@@ -1,5 +1,7 @@
 package com.example.fundtransferservice.model.dto;
 
+import com.example.fundtransferservice.model.rest.response.BeneficiaryResponse;
+import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,6 +17,9 @@ public class Transaction {
     private BigDecimal plafondMax;
     private Date issueDate;
     private Date expiryDate;
-    private String donorId;
-    private String beneficiaryId;
+    private Long donorId;
+    private Long beneficiaryId;
+    private Long agentId;
+    private ClientResponse clientResponse;
+    private BeneficiaryResponse beneficiaryResponse;
 }
