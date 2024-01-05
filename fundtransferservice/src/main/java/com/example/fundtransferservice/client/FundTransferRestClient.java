@@ -10,9 +10,6 @@ import java.util.Map;
 
 @FeignClient(name ="userservice")
 public interface FundTransferRestClient {
-
-    @RequestMapping(method = RequestMethod.GET, value = "/api/client/beneficiaires/1")
-    BeneficiaryResponse readBeneficiary();
     @RequestMapping(method = RequestMethod.GET, value = "/api/agent/get-agent-data/{id}/")
     AgentResponse getAgentInfo(@PathVariable("id") Long agentId);
     @RequestMapping(method = RequestMethod.GET, value = "/api/client/get-client-data/{id}")
@@ -34,11 +31,6 @@ public interface FundTransferRestClient {
             "/loadData")
     String loadData();
 
-    // Settle payment or block process
-    //TODO: COMMUNICATE WITH OTHER MICROSERVICE
-    //TODO : Look up beneficiary by name for agent or GAB
-    //TODO : Look up beneficiary by Wallet code
-    //TODO: Check beneficiary status ( is it blacklisted ? )
     //TODO : Sign a new client for Wallet account
     //TODO : access agent info and update his credits
 }
