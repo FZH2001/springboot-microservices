@@ -19,6 +19,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ClientService {
+
+    // teste du code
     private final ClientRepository clientRepository;
     private final BeneficiaireRepository beneficiaireRepository;
     private final AgentRepository agentRepository;
