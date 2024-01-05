@@ -49,8 +49,5 @@ public class TransferValidationService {
         }
     }
 
-    public void updateAgentCredits(){
-
-    }
 
 }

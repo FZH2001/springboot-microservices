@@ -1,5 +1,6 @@
 package com.example.fundtransferservice.service;
 
+import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.TransactionStatus;
 import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.Transaction;
@@ -8,6 +9,7 @@ import com.example.fundtransferservice.model.dto.TransactionResponse;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
+import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import java.util.UUID;
 public class TransferService {
     private final TransactionRepository transactionRepository;
     private final FeesCalculationService feesCalculationService;
+    private final FundTransferRestClient fundTransferRestClient;
     private TransactionMapper mapper = new TransactionMapper();
 
 
@@ -47,14 +50,16 @@ public class TransferService {
 
         // ? : checks if amount is greater than plafond
         TransactionEntity entity = new TransactionEntity();
+
         BeanUtils.copyProperties(request,entity);
+        ClientResponse clientResponse = fundTransferRestClient.getClientInfo(entity.getDonorId());
+
         TransactionResponse response = new TransactionResponse();
         if(entity.getAmount() < entity.getPlafond().doubleValue()){
             response.setMessage("Amount is greater than plafond");
             response.setTransactionId(UUID.randomUUID().toString());
         }
         // TODO :  check if amount is greater than Client Balance ( for Mobile and Debit de Compte )
-
         // TODO : check if amount is greater than Agent Balance ( for CASH )
         else{
             // ? : if the amount is valid then we proceed with Fees calculation

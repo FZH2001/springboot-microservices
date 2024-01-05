@@ -25,5 +25,6 @@ public class ClientResponse {
     private String gsm;
     private String email;
     private AgentResponse agentResponse;
+    private Double solde;
     private List<BeneficiaryResponse> beneficiaires;
 }
