@@ -18,6 +18,8 @@ public class Beneficiaire {
     private String email;
     private String phone;
     private Boolean isBlockListed;
+
+    private String walletCode;
     @ManyToOne
     @JsonIgnore
     private Client client;
