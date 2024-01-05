@@ -8,6 +8,7 @@ import us.userservice.entity.Student;
 import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Client;
 import us.userservice.service.AgentService;
+import us.userservice.service.ClientService;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AgentController {
     private final AgentService agentService;
+    private final ClientService clientService;
 
     @GetMapping("/get-agent-data/{id}")
     public ResponseEntity<Agent> getAgentData(@PathVariable Long id){
@@ -29,6 +31,15 @@ public class AgentController {
             return new ResponseEntity<>("Agent updated successfully",HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/add-client/{benId}")
+    public ResponseEntity<Object> createBeneficiaireClient(@PathVariable Long benId,@RequestBody Client c){
+        try{
+            Client out = clientService.saveBeneficiaireClient(c,benId);
+            return new ResponseEntity<>(out,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error : "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
