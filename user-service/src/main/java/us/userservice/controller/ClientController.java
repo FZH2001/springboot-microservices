@@ -50,5 +50,10 @@ public class ClientController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/add-client")
+    public ResponseEntity<String> saveOrUpdateClient(@RequestBody Client client) {
+        clientService.saveOrUpdateClient(client);
+        return new ResponseEntity<>("Client saved or updated successfully", HttpStatus.CREATED);
+    }
 
 }
