@@ -28,4 +28,5 @@ public class Transaction {
     private boolean isNotificationFees;
     private double fraisTransfert;
     private String whoPayFees;
+    private String RefundReason;
 }
