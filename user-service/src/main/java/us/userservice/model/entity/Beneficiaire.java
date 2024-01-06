@@ -1,10 +1,12 @@
 package us.userservice.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import us.userservice.serializer.HibernateProxySerializer;
 
 @Entity
 @Data
@@ -25,8 +27,8 @@ public class Beneficiaire {
     private Client client;
 
     // Reference to benefeciary wallet account
-    @OneToOne()
-    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = HibernateProxySerializer.class)
     private Client walletClient;
 
 
