@@ -20,4 +20,6 @@ public interface BeneficiaireRepository extends JpaRepository<Beneficiaire,Long>
     @Query("SELECT b.isBlockListed FROM Beneficiaire b WHERE b.id = :id")
     Boolean isBeneficiaireBlockListed(@Param("id") Long id);
 
+    @Override
+    void deleteAllById(Iterable<? extends Long> longs);
 }

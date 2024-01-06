@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Client;
 import us.userservice.repository.AgentRepository;
+import us.userservice.repository.BeneficiaireRepository;
 import us.userservice.repository.ClientRepository;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
 public class AgentService {
     private final AgentRepository agentRepository;
     private final ClientRepository clientRepository;
+    private final BeneficiaireRepository beneficiaireRepository;
 
     public List<Client> getAllClients() {
         return clientRepository.findAll();
@@ -30,6 +32,13 @@ public class AgentService {
 
     public void deleteClient(Long id) {
         clientRepository.deleteById(id);
+    }
+
+    public void deleteClients(List<Long> ids){
+        clientRepository.deleteAllById(ids);
+    }
+    public void deleteBeneficiaires(List<Long> ids){
+        beneficiaireRepository.deleteAllById(ids);
     }
 
     public void saveOrUpdateClient(Client client) {

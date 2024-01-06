@@ -33,6 +33,27 @@ public class AgentController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/delete-clients")
+    public ResponseEntity<String> deleteClients(List<Long> ids){
+        try{
+            agentService.deleteClients(ids);
+            return new ResponseEntity<>("Clients deleted successfully",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error : "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/delete-beneficiaires")
+    public ResponseEntity<String> deleteBeneficiaires(List<Long> ids){
+        try{
+            agentService.deleteBeneficiaires(ids);
+            return new ResponseEntity<>("Beneficiaires deleted successfully",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error : "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @PostMapping("/add-client/{benId}")
     public ResponseEntity<Object> createBeneficiaireClient(@PathVariable Long benId,@RequestBody Client c){
         try{
