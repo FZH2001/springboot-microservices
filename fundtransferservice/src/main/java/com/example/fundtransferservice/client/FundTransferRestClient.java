@@ -4,6 +4,8 @@ import com.example.fundtransferservice.model.rest.response.AgentResponse;
 import com.example.fundtransferservice.model.rest.response.BeneficiaryResponse;
 import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -36,9 +38,10 @@ public interface FundTransferRestClient {
 
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/client" +
-            "/loadData")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/client/loadData")
     String loadData();
 
-    //TODO : Sign a new client for Wallet account
+    @RequestMapping(method = RequestMethod.POST, value = "/api/client/add-beneficiary")
+    ResponseEntity<String> createBeneficiary(@RequestBody BeneficiaryResponse beneficiaryResponse);
+
 }
