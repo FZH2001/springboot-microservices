@@ -7,6 +7,4 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity,L
     TransactionEntity findByTransactionReference(String transactionReference);
     TransactionEntity findByAgentId(Long agentId);
 //    TransactionEntity findByTransactionReference(String transactionReference,String code);
-
-
 }

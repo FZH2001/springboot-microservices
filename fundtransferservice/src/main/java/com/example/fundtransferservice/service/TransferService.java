@@ -48,14 +48,21 @@ public class TransferService {
 
     public TransactionResponse  validateSubmission(TransactionRequest request){
 
+        if (request.getDonorId() == null || request.getAgentId() == null || request.getBeneficiaryId() == null  || request.getWhoPayFees() == null){
+            return utils.buildFailedTransactionResponse(request.getTransactionReference(),"DonorId or BeneficiaryId or whoPayFees is null");
+        }
+
         // ? : checks if amount is greater than plafond
         TransactionEntity transactionEntity = new TransactionEntity();
+        System.out.println("request : " +request.getPaymentType());
         BeanUtils.copyProperties(request,transactionEntity);
+        System.out.println(transactionEntity.getDonorId());
+        System.out.println(transactionEntity.getPaymentType());
         ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transactionEntity.getDonorId());
         AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(transactionEntity.getAgentId());
         transactionEntity.setTransactionReference(UUID.randomUUID().toString());
         TransactionResponse response = new TransactionResponse();
-        if(transactionEntity.getAmount() < transactionEntity.getPlafond().doubleValue()){
+        if(transactionEntity.getAmount() > transactionEntity.getPlafond().doubleValue()){
             response=utils.buildFailedTransactionResponse(transactionEntity.getTransactionReference(),"Amount is greater than plafond");
         }
         // TODO :  check if amount is greater than Client Balance ( for Mobile and Debit de Compte )
@@ -71,19 +78,20 @@ public class TransferService {
 
         else{
             // ? : if the notify is true then we send SMS to the beneficiary
-            if(transactionEntity.isNotify()){
+            /*if(transactionEntity.isNotify()){
                 // TODO : send SMS to the beneficiary
                 sendTransactionReferenceToBeneficiary(transactionEntity);
-            }
+            }*/
 
             // ? : if the amount is valid then we proceed with Fees calculation
             feesCalculation(transactionEntity);
 
             // ? : we send an OTP to the client and to the Front
             String otp = generateOTP(6);
-            sendOTP(transactionEntity,otp);
+            /*sendOTP(transactionEntity,otp);*/
 
             // ? : we save the transaction in the database
+            transactionEntity.setStatus(TransactionStatus.TO_BE_SERVED);
             transactionRepository.save(transactionEntity);
             response=utils.buildSuccessfulTransactionResponse(transactionEntity);
             response.setGeneratedOTP(otp);
@@ -137,7 +145,8 @@ public class TransferService {
     }
     public void sendOTP(TransactionEntity entity,String otp){
         // TODO : send OTP to the client
-        smsService.sendSMStoClient(new SMSRequest(fundTransferRestClient.getClientInfo(entity.getBeneficiaryId()).getGsm(),otp,fundTransferRestClient.getClientInfo(entity.getDonorId()).getPrenom()));
+        System.out.println("I am sending OTP to the client");
+        smsService.sendSMStoClient(new SMSRequest(fundTransferRestClient.getClientInfo(entity.getDonorId()).getGsm(),otp,fundTransferRestClient.getClientInfo(entity.getDonorId()).getPrenom()));
 
     }
     public void sendTransactionReferenceToBeneficiary(TransactionEntity entity){

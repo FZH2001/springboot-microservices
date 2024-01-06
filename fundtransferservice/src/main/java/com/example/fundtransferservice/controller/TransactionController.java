@@ -79,7 +79,7 @@ public class TransactionController {
         }
     }
 
-    @PostMapping("/SubmitTransaction")
+    @PostMapping("/agent/submitTransaction")
     public ResponseEntity<TransactionResponse> submitTransaction(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.validateSubmission(transactionRequest));
