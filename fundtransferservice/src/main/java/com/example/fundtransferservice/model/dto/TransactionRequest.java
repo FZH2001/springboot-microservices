@@ -3,9 +3,10 @@ package com.example.fundtransferservice.model.dto;
 import java.math.BigDecimal;
 
 public class TransactionRequest {
-    private String donorId;
-    private String beneficiaryId;
-    private BigDecimal amount;
+    private Long donorId;
+    private Long beneficiaryId;
+    private Long agentId;
+    private double amount;
     private String whoPayFees;
 
     private boolean isNotificationFees;

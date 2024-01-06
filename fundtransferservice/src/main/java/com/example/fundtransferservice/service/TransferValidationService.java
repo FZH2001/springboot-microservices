@@ -46,14 +46,18 @@ public class TransferValidationService {
             }
             else {
                 log.info("Payment is settled");
-                integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement");
-                transactionEntity.setStatus(TransactionStatus.PAID);
-                transactionRepository.save(transactionEntity);
-                if(transactionEntity.getPaymentType().equals(TransactionType.WALLET)){
-                    integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(),transactionEntity.getAmount(),"increment");
-                    log.error("has not been implemented");
+                if(integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement")) {
+                    transactionEntity.setStatus(TransactionStatus.PAID);
+                    transactionRepository.save(transactionEntity);
+                    if (transactionEntity.getPaymentType().equals(TransactionType.WALLET)) {
+                        System.out.println(beneficiaryResponse.getWalletClient());
+                        integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(), transactionEntity.getAmount(), "increment");
+                    }
+                    transactionResponse = utils.buildSuccessfulTransactionResponse(transactionEntity);
                 }
-                transactionResponse=utils.buildSuccessfulTransactionResponse(transactionEntity);
+                else {
+                    transactionResponse = utils.buildFailedTransactionResponse(reference,"Agent went broke");
+                }
             }
         }
 

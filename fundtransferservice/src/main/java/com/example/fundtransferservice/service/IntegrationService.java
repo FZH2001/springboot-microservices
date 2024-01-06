@@ -40,7 +40,7 @@ public class IntegrationService {
         beneficiaryWallet.setGsm(beneficiaryResponse.getPhone());
         return beneficiaryWallet;
     }
-    public void updateAgentCredits(Long agentId, double amount, String operation){
+    public boolean updateAgentCredits(Long agentId, double amount, String operation){
         AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(agentId);
         double newAgentSolde = agentResponse.getSolde();
         // find agent to update
@@ -49,14 +49,18 @@ public class IntegrationService {
         }
         else if(operation.equals("decrement")){
             newAgentSolde-=amount;
+            if(newAgentSolde<0){
+                return false;
+            }
         }
         fundTransferRestClient.updateAgentCredits(agentId,newAgentSolde);
-
+    return true;
     }
 
     public void updateClientCredits(Long clientId, double amount, String operation){
         ClientResponse client = fundTransferRestClient.getClientInfo(clientId);
         double newAgentSolde = client.getSolde();
+
         // find agent to update
         if(operation.equals("increment")) {
             newAgentSolde+=amount;
@@ -64,7 +68,7 @@ public class IntegrationService {
         else if(operation.equals("decrement")){
             newAgentSolde-=amount;
         }
-        fundTransferRestClient.updateAgentCredits(clientId,newAgentSolde);
+        fundTransferRestClient.updateClientSolde(clientId,newAgentSolde);
 
     }
 
