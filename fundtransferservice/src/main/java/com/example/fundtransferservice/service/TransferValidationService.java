@@ -21,6 +21,7 @@ public class TransferValidationService {
     private final IntegrationService integrationService;
     private final FundTransferRestClient fundTransferRestClient;
     private final Utils utils;
+    private final FeesCalculationService feesCalculationService;
 
     public TransactionResponse validatePayment(String reference){
 
@@ -29,9 +30,8 @@ public class TransferValidationService {
         TransactionResponse transactionResponse = new TransactionResponse();
         //noinspection ConstantValue
         if(transactionEntity!=null){
-
-            if(integrationService.isBeneficiaryBlackListed(transactionEntity.getBeneficiaryId())
-                    || (transactionEntity.getPaymentType().equals(TransactionType.GAB) && integrationService.isGabEmpty())){
+            // check for blocking process
+            if(integrationService.isBeneficiaryBlackListed(transactionEntity.getBeneficiaryId())){
                 log.info("Payment is blocked");
                 transactionEntity.setStatus(TransactionStatus.BLOCKED);
                 transactionRepository.save(transactionEntity);
@@ -40,31 +40,50 @@ public class TransferValidationService {
             else if(transactionEntity.getStatus().equals(TransactionStatus.PAID) || transactionEntity.getStatus().equals(TransactionStatus.BLOCKED)){
                 transactionResponse=utils.buildFailedTransactionResponse(reference,"Payment is already paid or blocked");
             }
-            else if(transactionEntity.getPaymentType().equals(TransactionType.WALLET)
-                    &&!integrationService.beneficiaryHasWallet(beneficiaryResponse.getId())){
-                transactionResponse=utils.buildFailedTransactionResponse(reference,"Beneficiary needs wallet account");
-            }
+            // check for type of payment
             else {
-                log.info("Payment is settled");
-                if(integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement")) {
+                switch (transactionEntity.getPaymentType()){
+                    case WALLET:
+                        if(!integrationService.beneficiaryHasWallet(beneficiaryResponse.getId())){
+                            return utils.buildFailedTransactionResponse(reference,"Beneficiary needs wallet account");
+                        }
+                        else {
+                            double amountToBeAdded = transactionEntity.getWhoPayFees().equals("Donor") ? feesCalculationService.calculFraisDonneurOrdre(transactionEntity.getAmount(),
+                                    transactionEntity.getFraisTransfert(),
+                                    transactionEntity.isNotificationFees()).get("montantTransferer"):
+                                    (transactionEntity.getWhoPayFees().equals("Beneficiary") ?
+                                            feesCalculationService.calculFraisBeneficiaire(transactionEntity.getAmount(),
+                                                    transactionEntity.getFraisTransfert(),
+                                                    transactionEntity.isNotificationFees()).get("montantTransferer")
+                                            :feesCalculationService.calculFraisPartages(transactionEntity.getAmount(),
+                                            transactionEntity.getFraisTransfert(),
+                                            transactionEntity.isNotificationFees()).get("montantTransferer"));
+                            integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(),amountToBeAdded, "increment");
+                        }
+                        break;
+                    case CASH:
+                        if(!integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement")){
+                            return utils.buildFailedTransactionResponse(reference,"Agent went broke");
+                        }
+                        break;
+                    case GAB:
+                        if(integrationService.isGabEmpty()){
+                            return utils.buildFailedTransactionResponse(reference,"GAB is Empty");
+                        }
+                        break;
+                    default:
+                        return utils.buildFailedTransactionResponse(reference,"Something really fishy going on here");
+                }
+            }
+
                     transactionEntity.setStatus(TransactionStatus.PAID);
                     transactionRepository.save(transactionEntity);
-                    if (transactionEntity.getPaymentType().equals(TransactionType.WALLET)) {
-                        System.out.println(beneficiaryResponse.getWalletClient());
-                        integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(), transactionEntity.getAmount(), "increment");
-                    }
-                    transactionResponse = utils.buildSuccessfulTransactionResponse(transactionEntity);
-                }
-                else {
-                    transactionResponse = utils.buildFailedTransactionResponse(reference,"Agent went broke");
-                }
-            }
-        }
+                    return utils.buildSuccessfulTransactionResponse(transactionEntity);
 
+            }
         else {
-            transactionResponse=utils.buildFailedTransactionResponse(reference,"Transaction not found");
+            return utils.buildFailedTransactionResponse(reference,"Transaction not found");
         }
-        return transactionResponse;
     }
 
 

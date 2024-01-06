@@ -16,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -99,7 +102,12 @@ public class TransferService {
             }else{
                 transactionEntity.setTotalAmount(transactionEntity.getAmount()+transactionEntity.getFraisTransfert());
             }
-
+            LocalDate issueDate = LocalDate.now();
+            LocalDate expiryDate = issueDate.plusDays(7);
+            System.out.println(issueDate);
+            System.out.println(Date.from(issueDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            transactionEntity.setIssueDate(Date.from(issueDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            transactionEntity.setExpiryDate(Date.from(expiryDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
             // ? : we save the transaction in the database
             transactionRepository.save(transactionEntity);
             response=utils.buildSuccessfulTransactionResponse(transactionEntity);

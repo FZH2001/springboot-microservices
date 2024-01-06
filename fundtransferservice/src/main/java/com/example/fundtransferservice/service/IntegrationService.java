@@ -30,7 +30,7 @@ public class IntegrationService {
     }
     public boolean beneficiaryHasWallet(Long benId){
         BeneficiaryResponse beneficiaryResponse = fundTransferRestClient.getBeneficiaryInfo(benId);
-        return !beneficiaryResponse.getWalletCode().isEmpty();
+        return !(beneficiaryResponse.getWalletClient()==null);
     }
     public ClientResponse createWalletClient(BeneficiaryResponse beneficiaryResponse){
         ClientResponse beneficiaryWallet = new ClientResponse();
@@ -58,6 +58,7 @@ public class IntegrationService {
     }
 
     public void updateClientCredits(Long clientId, double amount, String operation){
+        log.info("Client id : "+clientId);
         ClientResponse client = fundTransferRestClient.getClientInfo(clientId);
         double newAgentSolde = client.getSolde();
 

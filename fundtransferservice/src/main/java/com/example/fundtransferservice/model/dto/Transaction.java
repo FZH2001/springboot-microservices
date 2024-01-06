@@ -12,8 +12,7 @@ import java.util.Date;
 
 @Data
 public class Transaction {
-    private ClientResponse clientResponse;
-    private BeneficiaryResponse beneficiaryResponse;
+
     private Long id;
     private String transactionReference;
     private TransactionStatus status;
@@ -29,4 +28,6 @@ public class Transaction {
     private double fraisTransfert;
     private String whoPayFees;
     private String RefundReason;
+    private ClientResponse clientResponse;
+    private BeneficiaryResponse beneficiaryResponse;
 }

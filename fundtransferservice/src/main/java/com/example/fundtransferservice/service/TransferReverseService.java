@@ -1,6 +1,7 @@
 package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.model.TransactionStatus;
+import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.Transaction;
 import com.example.fundtransferservice.model.dto.TransactionResponse;
 import com.example.fundtransferservice.model.dto.Utils;
@@ -32,7 +33,7 @@ public class TransferReverseService {
         boolean isSameDay = (issueLocalDate.getDayOfMonth() == today.getDayOfMonth()) &&
                 (issueLocalDate.getMonth() == today.getMonth()) &&
                 (issueLocalDate.getYear() == today.getYear());
-        if(transactionEntity==null || refundMotive.isEmpty()){
+        if(transactionEntity==null || refundMotive.isEmpty() || !transactionEntity.getPaymentType().equals(TransactionType.CASH)){
             log.error("Transfer not found or motive is empty");
             return utils.buildFailedTransactionResponse(referenceCode,"transfer not found or motive is empty");
         }
@@ -44,11 +45,10 @@ public class TransferReverseService {
         }
         else if(!transactionEntity.getAgentId().equals(agentId)){
             log.error("Find your agent son , this ain't the one");
-            return null;
+            return utils.buildFailedTransactionResponse(referenceCode,"Find your agent son , this ain't the one");
         }
         transactionEntity.setStatus(TransactionStatus.REVERSED);
         integrationService.updateAgentCredits(agentId,transactionEntity.getAmount()+transactionEntity.getFraisTransfert(),"increment");
-        //integrationService.generateReceipt(referenceCode);
         transactionRepository.save(transactionEntity);
        return utils.buildSuccessfulTransactionResponse(transactionEntity);
 

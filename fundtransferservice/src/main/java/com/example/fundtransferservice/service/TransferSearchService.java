@@ -9,10 +9,12 @@ import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
 import com.example.fundtransferservice.model.rest.response.BeneficiaryResponse;
+import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
@@ -23,8 +25,23 @@ public class TransferSearchService {
     private final IntegrationService integrationService;
     private final FundTransferRestClient fundTransferRestClient;
     private final Utils utils;
-    public List<Transaction> readAllTransfers() {
-        return mapper.convertToDtoList(transactionRepository.findAll());
+    public List<TransactionResponse> readAllTransfers() {
+        List<Transaction> transactions = mapper.convertToDtoList(transactionRepository.findAll());
+        List<TransactionResponse> transactionResponses = new ArrayList<>();
+        for (Transaction transaction:transactions) {
+            ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transaction.getDonorId());
+            clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+            transaction.setClientResponse(clientResponse);
+            // add beneficiary information to the transaction
+            transaction.setBeneficiaryResponse(fundTransferRestClient.getBeneficiaryInfo(transaction.getBeneficiaryId()));
+            TransactionResponse transactionResponse = new TransactionResponse();
+            transactionResponse.setTransaction(transaction);
+            transactionResponse.setTransactionId(transaction.getTransactionReference());
+            transactionResponse.setMessage("Success");
+            transactionResponses.add(transactionResponse);
+        }
+
+        return transactionResponses;
     }
 
     // ? : Find Transaction by reference : Agent for cash transactions

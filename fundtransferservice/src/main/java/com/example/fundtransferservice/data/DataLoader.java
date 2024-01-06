@@ -1,27 +1,31 @@
 package com.example.fundtransferservice.data;
 
+import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.TransactionStatus;
 import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.repository.TransactionRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Random;
 
-@Component
+@Service
+@Slf4j
+@RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
     private final TransactionRepository transactionRepository;
-
-    public DataLoader(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
-    }
+    private final FundTransferRestClient fundTransferRestClient;
 
     @Override
     public void run(String... args) throws Exception {
+        fundTransferRestClient.loadData();
         Random random = new Random();
         for (int i = 1; i <= 10; i++) {
             TransactionEntity transaction = new TransactionEntity();
