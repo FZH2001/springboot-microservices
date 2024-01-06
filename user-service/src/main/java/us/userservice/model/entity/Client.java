@@ -36,8 +36,14 @@ public class Client {
     @ManyToOne(fetch = FetchType.EAGER)
     private Agent agent;
     private Double solde;
+
     @JsonIgnore
     @OneToMany
     List<Beneficiaire> beneficiaires;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Beneficiaire beneficiaire;
+
 
 }

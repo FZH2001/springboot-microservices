@@ -26,6 +26,12 @@ public class ClientService {
     private final AgentRepository agentRepository;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
+    public Client saveBeneficiaireClient(Client c,Long benId){
+        Beneficiaire b = beneficiaireRepository.findById(benId).orElse(null);
+        c.setBeneficiaire(b);
+        return clientRepository.saveAndFlush(c);
+    }
+
 
     public Client getClientData(Long id){
         return clientRepository.findById(id).orElse(null);
@@ -123,10 +129,8 @@ public class ClientService {
             clientRepository.saveAll(List.of(c1,c2,c3));
             clientRepository.flush();
             Client client = clientRepository.findByPrenom("Hamza").orElse(null);
-
-            Beneficiaire b1 = new Beneficiaire(null,"ELGARAI","Karim","karimeg@yahoo.fr","0632579630",false,"hxxx23",client);
-            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail..com","0735903682",false,"xx34rr",client);
-
+            Beneficiaire b1 = new Beneficiaire(null,"ELGARAI","Karim","karimeg@yahoo.fr","0632579630",false,"hxxx23",client,null);
+            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail..com","0735903682",false,"xx34rr",client,null);
             beneficiaireRepository.saveAllAndFlush(List.of(b1,b2));
 
 

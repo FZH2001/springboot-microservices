@@ -19,9 +19,13 @@ public class Beneficiaire {
     private String phone;
     private Boolean isBlockListed;
     private String walletCode;
+    //Parent client (the client who owns Beneficiaire records)
     @ManyToOne
     @JsonIgnore
     private Client client;
-
+    // Reference to benefeciary wallet account
+    @OneToOne()
+    @JsonIgnore
+    private Client walletClient;
 
 }

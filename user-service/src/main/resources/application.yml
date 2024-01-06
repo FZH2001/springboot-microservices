@@ -7,7 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto:
-        create
+        create-drop
   datasource:
     url:
       jdbc:mysql://localhost:3306/user_service_ms
