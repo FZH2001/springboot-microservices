@@ -90,8 +90,17 @@ public class TransferService {
             String otp = generateOTP(6);
             /*sendOTP(transactionEntity,otp);*/
 
-            // ? : we save the transaction in the database
+            // ? : we set the transaction status to TO_BE_SERVED
             transactionEntity.setStatus(TransactionStatus.TO_BE_SERVED);
+
+            // ? : we set the total amount of the transaction
+            if(request.isNotificationFees()){
+                transactionEntity.setTotalAmount(transactionEntity.getAmount()+transactionEntity.getFraisTransfert()+FeesCalculationService.fraisServiceNotification);
+            }else{
+                transactionEntity.setTotalAmount(transactionEntity.getAmount()+transactionEntity.getFraisTransfert());
+            }
+
+            // ? : we save the transaction in the database
             transactionRepository.save(transactionEntity);
             response=utils.buildSuccessfulTransactionResponse(transactionEntity);
             response.setGeneratedOTP(otp);
@@ -101,6 +110,10 @@ public class TransferService {
     }
 
     public TransactionResponse validateRestitution(TransactionRequest request){
+
+        if(request.getTransactionReference() == null || request.getAgentId() == null){
+            utils.buildFailedTransactionResponse(request.getTransactionReference(),"TransactionReference or AgentId is null");
+        }
         TransactionEntity transactionEntity = new TransactionEntity();
         BeanUtils.copyProperties(request,transactionEntity);
         TransactionResponse response = new TransactionResponse() ;
@@ -123,21 +136,23 @@ public class TransferService {
             if(transactionToBeRestituted.getPaymentType().equals(TransactionType.CASH)){
 
                 double lastSolde = fundTransferRestClient.getAgentInfo(transactionToBeRestituted.getAgentId()).getSolde();
-                fundTransferRestClient.updateAgentCredits(transactionToBeRestituted.getAgentId(),lastSolde+ transactionToBeRestituted.getAmount());
+                fundTransferRestClient.updateAgentCredits(transactionToBeRestituted.getAgentId(),lastSolde+ transactionToBeRestituted.getTotalAmount());
 
             }
             // ? we update the client solde
             else {
                 double lastSolde = fundTransferRestClient.getClientInfo(transactionToBeRestituted.getDonorId()).getSolde();
-                fundTransferRestClient.updateClientSolde(transactionToBeRestituted.getDonorId(),lastSolde+ transactionToBeRestituted.getAmount());
+                fundTransferRestClient.updateClientSolde(transactionToBeRestituted.getDonorId(),lastSolde+ transactionToBeRestituted.getTotalAmount());
             }
 
             //? we notify the client that the transaction has been refunded
-            if(transactionEntity.isNotify()){
+            /*if(transactionEntity.isNotify()){
                 notifyClientWithRestitution(transactionToBeRestituted);
-            }
+            }*/
             transactionRepository.save(transactionToBeRestituted);
             response  = utils.buildSuccessfulTransactionResponse(transactionToBeRestituted);
+        }else {
+            response = utils.buildFailedTransactionResponse(transactionEntity.getTransactionReference(),"This agent has no right to restitute this transaction Or The the transaction can not be refunded");
         }
 
 
