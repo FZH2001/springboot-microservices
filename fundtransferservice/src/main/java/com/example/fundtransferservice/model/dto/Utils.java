@@ -23,7 +23,7 @@ public class Utils {
         return transactionResponse;
     }
     public TransactionResponse buildSuccessfulTransactionResponse(TransactionEntity transactionentity){
-        fundTransferRestClient.loadData();
+        // fundTransferRestClient.loadData();
         Transaction transaction = mapper.convertToDto(transactionentity);
         log.info("Status :"+transactionentity.getStatus());
         // add client information to the transaction

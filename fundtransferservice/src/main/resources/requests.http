@@ -7,3 +7,17 @@ Content-Type: application/json
   "sender" : "Ismail"
 }
 ###
+
+
+POST http://localhost:8083/TRANSFERSERVICE/api/v1/transaction/agent/SubmitTransaction
+Content-Type: application/json
+
+{
+  "donorId": "1",
+  "beneficiaryId": "2",
+  "amount": 1,
+  "whoPayFees": "donor",
+  "isNotificationFees": true,
+  "notify": true,
+  "fraisTransfert": 2
+}

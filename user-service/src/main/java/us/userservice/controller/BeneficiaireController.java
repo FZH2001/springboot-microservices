@@ -13,7 +13,6 @@ import java.util.Map;
 @RequestMapping("/api/beneficiary")
 @AllArgsConstructor
 public class BeneficiaireController{
-    ///////////////////////////// test
     private final BeneficiaireService beneficiaireService;
 
     @GetMapping("/get-beneficiary-data/{id}")

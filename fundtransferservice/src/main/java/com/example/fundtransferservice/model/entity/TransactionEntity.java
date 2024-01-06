@@ -31,9 +31,12 @@ public class TransactionEntity {
     private Long beneficiaryId;
     private Long agentId;
     private boolean isNotificationFees;
+    private boolean notify;
     private double fraisTransfert;
     private String whoPayFees;
+    private String RefundReason;
 
+    private double totalAmount;
     public Number getPlafond() {
         return plafondMax;
     }
