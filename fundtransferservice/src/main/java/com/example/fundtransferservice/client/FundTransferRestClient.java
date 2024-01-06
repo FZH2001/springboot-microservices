@@ -32,11 +32,15 @@ public interface FundTransferRestClient {
     @RequestMapping(method = RequestMethod.PUT, value = "/api/agents/update-agent-solde/{id}")
     String updateAgentCredits(@PathVariable Long id,@RequestParam Double newSolde);
 
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/clients/update-client-solde/{id}")
+    ResponseEntity<String> updateClientSolde(@PathVariable Long id, @RequestParam Double newSolde);
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/client/loadData")
     String loadData();
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/client/add-beneficiary")
     ResponseEntity<String> createBeneficiary(@RequestBody BeneficiaryResponse beneficiaryResponse);
+    @RequestMapping(method = RequestMethod.POST, value = "/api/agents/add-client/{benId}")
+    ResponseEntity<Object> createBeneficiaireClient(@PathVariable Long benId,@RequestBody ClientResponse c);
 
 }

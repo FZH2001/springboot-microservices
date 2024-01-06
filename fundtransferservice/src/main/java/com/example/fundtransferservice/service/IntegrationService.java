@@ -2,6 +2,7 @@ package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.rest.response.AgentResponse;
+import com.example.fundtransferservice.model.rest.response.BeneficiaryResponse;
 import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ public class IntegrationService {
     public final ReceiptGeneratorService receiptGeneratorService;
     private final FundTransferRestClient fundTransferRestClient;
 
-    public boolean isBeneficiaryBlocked(Long id) {
+    public boolean isBeneficiaryBlackListed(Long id) {
         return fundTransferRestClient.isBeneficiaryBlacklisted(id);
     }
     public boolean isGabEmpty(){
@@ -26,6 +27,18 @@ public class IntegrationService {
     public boolean isCodeValid(String code){
         //TODO
         return false;
+    }
+    public boolean beneficiaryHasWallet(Long benId){
+        BeneficiaryResponse beneficiaryResponse = fundTransferRestClient.getBeneficiaryInfo(benId);
+        return !beneficiaryResponse.getWalletCode().isEmpty();
+    }
+    public ClientResponse createWalletClient(BeneficiaryResponse beneficiaryResponse){
+        ClientResponse beneficiaryWallet = new ClientResponse();
+        beneficiaryWallet.setPrenom(beneficiaryResponse.getPrenom());
+        beneficiaryWallet.setTitle(beneficiaryResponse.getNom());
+        beneficiaryWallet.setEmail(beneficiaryResponse.getEmail());
+        beneficiaryWallet.setGsm(beneficiaryResponse.getPhone());
+        return beneficiaryWallet;
     }
     public void updateAgentCredits(Long agentId, double amount, String operation){
         AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(agentId);
@@ -41,6 +54,19 @@ public class IntegrationService {
 
     }
 
+    public void updateClientCredits(Long clientId, double amount, String operation){
+        ClientResponse client = fundTransferRestClient.getClientInfo(clientId);
+        double newAgentSolde = client.getSolde();
+        // find agent to update
+        if(operation.equals("increment")) {
+            newAgentSolde+=amount;
+        }
+        else if(operation.equals("decrement")){
+            newAgentSolde-=amount;
+        }
+        fundTransferRestClient.updateAgentCredits(clientId,newAgentSolde);
+
+    }
 
     public void settleClientBalance(String clientId, BigDecimal fees){
         //TODO : access client info and update his credits
@@ -55,6 +81,7 @@ public class IntegrationService {
         try {
             receiptGeneratorService.createDocument();
             receiptGeneratorService.createHeaderDetails(reference);
+            receiptGeneratorService.createAddress("Anas","Marrakech","anasssaidi1337@gmail.com");
         }
         catch(FileNotFoundException fileNotFoundException){
             log.error(fileNotFoundException.getMessage());

@@ -12,6 +12,6 @@ public class BeneficiaryResponse {
     private String email;
     private String phone;
     private Boolean isBlockListed;
-    private Boolean hasWallet;
+    private String walletCode;
     //private ClientResponse clientResponse;
 }
