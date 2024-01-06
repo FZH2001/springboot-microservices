@@ -50,7 +50,7 @@ public class TransferValidationService {
                 transactionEntity.setStatus(TransactionStatus.PAID);
                 transactionRepository.save(transactionEntity);
                 if(transactionEntity.getPaymentType().equals(TransactionType.WALLET)){
-                    integrationService.updateClientCredits(1L,transactionEntity.getAmount(),"increment");
+                    integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(),transactionEntity.getAmount(),"increment");
                     log.error("has not been implemented");
                 }
                 transactionResponse=utils.buildSuccessfulTransactionResponse(transactionEntity);

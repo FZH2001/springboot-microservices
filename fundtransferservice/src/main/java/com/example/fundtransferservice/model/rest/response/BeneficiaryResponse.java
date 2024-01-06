@@ -13,5 +13,6 @@ public class BeneficiaryResponse {
     private String phone;
     private Boolean isBlockListed;
     private String walletCode;
+    private Long walletClient;
     //private ClientResponse clientResponse;
 }
