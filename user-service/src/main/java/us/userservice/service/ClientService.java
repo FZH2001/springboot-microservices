@@ -29,6 +29,8 @@ public class ClientService {
     public Client saveBeneficiaireClient(Client c,Long benId){
         Beneficiaire b = beneficiaireRepository.findById(benId).orElse(null);
         c.setBeneficiaire(b);
+        assert b != null;
+        b.setWalletClient(c);
         return clientRepository.saveAndFlush(c);
     }
 
