@@ -35,8 +35,8 @@ public class TransactionController {
     }
     // TODO : send and verify OTP
     @GetMapping("/agent/validate/{transactionReference}")
-    public ResponseEntity<TransactionResponse> validatePayment(@PathVariable String transactionReference){
-        return ResponseEntity.ok(transferValidationService.validatePayment(transactionReference));
+    public ResponseEntity<TransactionResponse> validatePayment(@PathVariable String transactionReference,@RequestBody String otp){
+        return ResponseEntity.ok(transferValidationService.validatePayment(transactionReference,otp));
     }
     // To get transaction by agent or wallet
     @GetMapping("/agent/{transactionReference}")

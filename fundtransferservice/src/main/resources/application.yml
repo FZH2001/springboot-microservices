@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
     username: root
-    password: ismail
+    password: Massaq51354
   jpa:
     hibernate:
       ddl-auto: create-drop

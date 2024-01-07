@@ -22,4 +22,5 @@ public class TransactionRequest {
     private String authID;
     private String RefundReason;
     private TransactionType paymentType;
+    private String otpValue;
 }

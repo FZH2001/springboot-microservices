@@ -52,10 +52,10 @@ public class TransferSearchService {
             log.error("Transfer not found");
             return utils.buildFailedTransactionResponse(reference,"Transaction not found");
         }
-        else if(transactionEntity.getStatus().equals(TransactionStatus.BLOCKED) || transactionEntity.getStatus().equals(TransactionStatus.PAID)){
-            log.error("Transfer is blocked or already paid");
-            return utils.buildFailedTransactionResponse(reference,"Transfer is blocked or already paid");
-        }
+//        else if(transactionEntity.getStatus().equals(TransactionStatus.BLOCKED) || transactionEntity.getStatus().equals(TransactionStatus.PAID)){
+//            log.error("Transfer is blocked or already paid");
+//            return utils.buildFailedTransactionResponse(reference,"Transfer is blocked or already paid");
+//        }
         return utils.buildSuccessfulTransactionResponse(transactionEntity);
     }
     // Find Transaction by reference and SMS code : for GAB and Wallet
