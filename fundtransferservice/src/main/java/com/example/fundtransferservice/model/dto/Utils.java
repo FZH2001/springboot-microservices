@@ -1,6 +1,7 @@
 package com.example.fundtransferservice.model.dto;
 
 import com.example.fundtransferservice.client.FundTransferRestClient;
+import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
 import com.example.fundtransferservice.model.mapper.TransactionMapper;
 import com.example.fundtransferservice.model.rest.response.ClientResponse;
@@ -28,7 +29,10 @@ public class Utils {
         log.info("Status :"+transactionentity.getStatus());
         // add client information to the transaction
         ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transaction.getDonorId());
-        clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+
+        if(transactionentity.getPaymentType().equals(TransactionType.CASH)){
+            clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+        }
         transaction.setClientResponse(clientResponse);
         // add beneficiary information to the transaction
         transaction.setBeneficiaryResponse(fundTransferRestClient.getBeneficiaryInfo(transaction.getBeneficiaryId()));

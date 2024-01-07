@@ -12,6 +12,7 @@ import com.example.fundtransferservice.model.rest.response.ClientResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class TransferService {
     private final NotificationService smsService;
     private TransactionMapper mapper = new TransactionMapper();
 
+    @Autowired
+    private OTPService otpService;
+
 
     public TransactionResponse fundTransfer(TransactionRequest request) {
         log.info("Sending fund transfer request {}" + request.toString());
@@ -51,8 +55,19 @@ public class TransferService {
 
     public TransactionResponse  validateSubmission(TransactionRequest request){
 
-        if (request.getDonorId() == null || request.getAgentId() == null || request.getBeneficiaryId() == null  || request.getWhoPayFees() == null){
+        System.out.println("OTP :" +request.getOtpValue());
+        System.out.println("donor Id" + request.getDonorId());
+
+        if(!otpService.validateOTP(request.getOtpValue())){
+            return utils.buildFailedTransactionResponse(request.getTransactionReference(),"OTP is not valid");
+        }
+
+        System.out.println("Data received " +request.getDonorId()+ " "+request.getBeneficiaryId()+ " "+request.getWhoPayFees()+ " "+request.getAgentId()+ " "+request.getPaymentType());
+        if (request.getDonorId() == null || request.getBeneficiaryId() == null  || request.getWhoPayFees() == null){
             return utils.buildFailedTransactionResponse(request.getTransactionReference(),"DonorId or BeneficiaryId or whoPayFees is null");
+        }
+        if(request.getAgentId() == null && request.getPaymentType().equals("CASH")){
+            return utils.buildFailedTransactionResponse(request.getTransactionReference(),"AgentId is null");
         }
 
         // ? : checks if amount is greater than plafond
@@ -62,7 +77,10 @@ public class TransferService {
         System.out.println(transactionEntity.getDonorId());
         System.out.println(transactionEntity.getPaymentType());
         ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transactionEntity.getDonorId());
-        AgentResponse agentResponse = fundTransferRestClient.getAgentInfo(transactionEntity.getAgentId());
+        AgentResponse agentResponse = new AgentResponse();
+        if(request.getPaymentType().equals(TransactionType.CASH)){
+            agentResponse = fundTransferRestClient.getAgentInfo(transactionEntity.getAgentId());
+        }
         transactionEntity.setTransactionReference(UUID.randomUUID().toString());
         TransactionResponse response = new TransactionResponse();
         if(transactionEntity.getAmount() > transactionEntity.getPlafond().doubleValue()){
