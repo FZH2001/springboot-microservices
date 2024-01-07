@@ -7,14 +7,27 @@ spring:
   jpa:
     hibernate:
       ddl-auto:
+<<<<<<< HEAD
         create-drop
+=======
+        update
+>>>>>>> authentication-service
   datasource:
     url:
-      jdbc:mysql://localhost:3306/user_service_ms
+      jdbc:h2:mem:user_service
     username:
       root
     password:
+<<<<<<< HEAD
       ismail
+=======
+      12345
+
+  driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled:true
+>>>>>>> authentication-service
 eureka:
   client:
     service-url:
@@ -22,3 +35,6 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     enabled: true
+
+
+
