@@ -1,4 +1,24 @@
 
+#server:
+#  port: 8083
+#
+#spring:
+#  application:
+#    name: api-gateway
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    fetch-registry: true
+#    register-with-eureka: true
+#
+
 server:
   port: 8083
 
@@ -7,6 +27,27 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/client/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/agents/**
+        - id: authentication-service
+          uri: lb://AUTHENTICATION-SERVICE
+          predicates:
+                - Path=/api/auth/**
       discovery:
         locator:
           enabled: true
