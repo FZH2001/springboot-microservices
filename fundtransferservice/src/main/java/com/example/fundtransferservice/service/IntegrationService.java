@@ -72,16 +72,6 @@ public class IntegrationService {
         fundTransferRestClient.updateClientSolde(clientId,newAgentSolde);
 
     }
-
-    public void settleClientBalance(String clientId, BigDecimal fees){
-        //TODO : access client info and update his credits
-        // use this for Submit
-    }
-        public void createNewClient(ClientResponse clientResponse){
-            //TODO : Sign a new client for Wallet account
-        //fundTransferRestClient.createNewClient(clientResponse);
-        }
-
     public void generateReceipt(String reference){
         try {
             receiptGeneratorService.createDocument();

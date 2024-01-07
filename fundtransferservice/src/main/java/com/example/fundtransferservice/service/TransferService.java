@@ -136,7 +136,9 @@ public class TransferService {
     }
 
     public TransactionResponse validateRestitution(TransactionRequest request){
-
+        if(!otpService.validateOTP(request.getOtpValue())){
+            return utils.buildFailedTransactionResponse(request.getTransactionReference(),"OTP is not valid");
+        }
         if(request.getTransactionReference() == null || request.getAgentId() == null){
             utils.buildFailedTransactionResponse(request.getTransactionReference(),"TransactionReference or AgentId is null");
         }
@@ -184,12 +186,7 @@ public class TransferService {
 
         return response;
     }
-    public void sendOTP(TransactionEntity entity,String otp){
-        // TODO : send OTP to the client
-        System.out.println("I am sending OTP to the client");
-        smsService.sendSMStoClient(new SMSRequest(fundTransferRestClient.getClientInfo(entity.getDonorId()).getGsm(),otp,fundTransferRestClient.getClientInfo(entity.getDonorId()).getPrenom()));
 
-    }
     public void sendTransactionReferenceToBeneficiary(TransactionEntity entity){
         // TODO : send Transaction Reference to the beneficiary
         smsService.sendSMStoClient(new SMSRequest(fundTransferRestClient.getBeneficiaryInfo(entity.getBeneficiaryId()).getPhone(),entity.getTransactionReference(),fundTransferRestClient.getClientInfo(entity.getDonorId()).getPrenom()));
