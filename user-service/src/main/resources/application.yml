@@ -7,10 +7,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto:
-        update
+        create
   datasource:
     url:
-      jdbc:h2:mem:user_service
+      jdbc:mysql://localhost:3306/user_service_ms
     username:
       root
     password:
