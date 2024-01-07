@@ -13,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/agents")
+@CrossOrigin(origins = "http://localhost:4200")
+
 @AllArgsConstructor
 public class AgentController {
     private final AgentService agentService;

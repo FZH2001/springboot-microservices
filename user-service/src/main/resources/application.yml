@@ -3,18 +3,23 @@ server:
   port: 8111
 spring:
   application:
-    name: userservice
+    name: user-service
   jpa:
     hibernate:
       ddl-auto:
-        create
+        update
   datasource:
     url:
-      jdbc:mysql://localhost:3306/user_service_ms
+      jdbc:h2:mem:user_service
     username:
       root
     password:
-      Massaq51354
+      12345
+
+  driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled:true
 eureka:
   client:
     service-url:
@@ -22,3 +27,6 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     enabled: true
+
+
+
