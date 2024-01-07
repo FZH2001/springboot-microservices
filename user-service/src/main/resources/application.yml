@@ -10,23 +10,20 @@ spring:
         create
   datasource:
     url:
-      jdbc:mysql://localhost:3306/user_service_ms
+      jdbc:h2:mem:user-service
     username:
       root
     password:
-<<<<<<< HEAD
       12345
 
   driver-class-name: org.h2.Driver
   h2:
     console:
       enabled:true
-=======
-      Massaq51354
 
 
 
->>>>>>> 89b58df0674fa8540236c72de95087fe5f3eb698
+
 eureka:
   client:
     service-url:
