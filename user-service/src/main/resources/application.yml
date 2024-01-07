@@ -14,16 +14,12 @@ spring:
     username:
       root
     password:
-<<<<<<< HEAD
-      ismail
-=======
       12345
 
   driver-class-name: org.h2.Driver
   h2:
     console:
       enabled:true
->>>>>>> authentication-service
 eureka:
   client:
     service-url:
