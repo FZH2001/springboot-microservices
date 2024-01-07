@@ -80,15 +80,17 @@ public class AgentController {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Client updated successfully");
 
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Client not found");
 
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);        } catch (Exception e) {
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Internal server error");
 
-            return new ResponseEntity<>(response, HttpStatus.OK);        }
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);        }
     }
 
     @DeleteMapping("/client/{id}")
