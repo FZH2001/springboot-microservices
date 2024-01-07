@@ -32,5 +32,10 @@ public class BeneficiaireController{
         return beneficiaireService.getBeneficiaryInfoByCode(walletCode);
     }
 
+    @PostMapping("/update")
+    public String updateBeneficiaire(@RequestBody Beneficiaire b) {
+        beneficiaireService.updateBeneficiaire(b);
+        return "Beneficiaire updated successfully";
+    }
 
 }

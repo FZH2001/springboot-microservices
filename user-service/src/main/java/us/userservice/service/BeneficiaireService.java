@@ -25,4 +25,8 @@ public class BeneficiaireService {
         List<Beneficiaire> beneficiaries = beneficiaireRepository.searchBeneficiaireByTerm(walletCode);
         return beneficiaries.isEmpty() ? null : beneficiaries.get(0);
     }
+
+    public void updateBeneficiaire(Beneficiaire b){
+        beneficiaireRepository.save(b);
+    }
 }
