@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@FeignClient(name ="userservice")
+@FeignClient(name ="user-service")
 public interface FundTransferRestClient {
     @RequestMapping(method = RequestMethod.GET, value = "/api/agents/get-agent-data/{id}")
     AgentResponse getAgentInfo(@PathVariable("id") Long agentId);
