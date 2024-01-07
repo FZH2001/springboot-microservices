@@ -36,6 +36,12 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
+        - id: transfer-service
+          uri: lb://transfer-service
+          predicates:
+            - Path=/api/v1/transaction/**
+          filters:
+            - AuthenticationFilter
         - id: user-service
           uri: lb://user-service
           predicates:
