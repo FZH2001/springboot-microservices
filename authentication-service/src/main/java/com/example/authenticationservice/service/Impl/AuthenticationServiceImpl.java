@@ -13,6 +13,7 @@ import com.example.authenticationservice.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     @Override
-    public JwtAuthenticationResponse signup(SignUpRequest request) {
+    public  ResponseEntity<Object> signup(SignUpRequest request) {
+        try {
 
             var user = User.builder()
                     .firstName(request.getFirstName())
@@ -46,47 +48,52 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.AGENT).build();
-        // userRepository.save(user);
+            // userRepository.save(user);
 
             var savedUser = userRepository.save(user);
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
             saveUserToken(savedUser, jwtToken);
-            return JwtAuthenticationResponse.builder()
+            JwtAuthenticationResponse response= JwtAuthenticationResponse.builder()
                     .accessToken(jwtToken)
                     .refreshToken(refreshToken)
                     .build();
+            return ResponseEntity.ok(response);
 
-
+        }
+        catch(DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User already exists");
+        }
     }
 
     @Override
-    public JwtAuthenticationResponse signin(SignInRequest request) {
+    public ResponseEntity<Object> signin(SignInRequest request) {
         try{
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+            var user = userRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+            var jwt = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+
+            revokeAllUserTokens(user);
+            saveUserToken(user, jwt);
+
+
+            JwtAuthenticationResponse response= JwtAuthenticationResponse.builder()
+                    .accessToken(jwt)
+                    .refreshToken(refreshToken)
+                    .build();
+            return ResponseEntity.ok(response);
         }
         catch(BadCredentialsException exception){
             System.out.printf("Bad Credentials Exception is thrown");
-         //   return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         }
 
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
-        var jwt = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
 
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwt);
-
-
-        return JwtAuthenticationResponse.builder()
-                .accessToken(jwt)
-                .refreshToken(refreshToken)
-                .build();
     }
-
 
 
     private void saveUserToken(User user, String jwtToken) {
@@ -139,5 +146,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    public void validateToken(String token) {
+        jwtService.validateToken(token);
+    }
 
 }

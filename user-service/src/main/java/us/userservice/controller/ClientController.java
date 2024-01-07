@@ -12,14 +12,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/client")
-@AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
+
+@AllArgsConstructor
 public class ClientController {
     private final ClientService clientService;
 
 
     @GetMapping("/loadData")
     public String loadData(){
+        System.out.println("i am loadData of client controller");
         return clientService.loadData();
     }
     @GetMapping("/get-client-data/{id}")

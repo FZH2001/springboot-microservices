@@ -10,10 +10,13 @@ import us.userservice.model.entity.Client;
 import us.userservice.service.AgentService;
 import us.userservice.service.ClientService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/agents")
+@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class AgentController {
     private final AgentService agentService;
@@ -58,9 +61,16 @@ public class AgentController {
     }
 
     @PostMapping("/client")
-    public ResponseEntity<String> saveOrUpdateClient(@RequestBody Client client) {
-        agentService.saveOrUpdateClient(client);
-        return new ResponseEntity<>("Client saved or updated successfully", HttpStatus.CREATED);
+    public ResponseEntity<Map> saveOrUpdateClient(@RequestBody Client client) {
+        Map<String,String> response = new HashMap<>();
+        try{
+            agentService.saveOrUpdateClient(client);
+            response.put("message","Client saved or updated successfully");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }catch (Exception e){
+            response.put("message","Error : "+e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/client/{id}")
