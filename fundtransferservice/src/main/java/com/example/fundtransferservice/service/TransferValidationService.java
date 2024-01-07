@@ -2,7 +2,6 @@ package com.example.fundtransferservice.service;
 
 import com.example.fundtransferservice.client.FundTransferRestClient;
 import com.example.fundtransferservice.model.TransactionStatus;
-import com.example.fundtransferservice.model.TransactionType;
 import com.example.fundtransferservice.model.dto.TransactionResponse;
 import com.example.fundtransferservice.model.dto.Utils;
 import com.example.fundtransferservice.model.entity.TransactionEntity;
@@ -22,8 +21,12 @@ public class TransferValidationService {
     private final FundTransferRestClient fundTransferRestClient;
     private final Utils utils;
     private final FeesCalculationService feesCalculationService;
+    private final OTPService otpService;
 
-    public TransactionResponse validatePayment(String reference){
+    public TransactionResponse validatePayment(String reference, String otp){
+        if(!otpService.validateOTP(otp)){
+            return utils.buildFailedTransactionResponse(reference,"OTP is not valid");
+        }
 
         TransactionEntity transactionEntity =transactionRepository.findByTransactionReference(reference);
         BeneficiaryResponse beneficiaryResponse = fundTransferRestClient.getBeneficiaryInfo(transactionEntity.getDonorId());
@@ -45,9 +48,11 @@ public class TransferValidationService {
                 switch (transactionEntity.getPaymentType()){
                     case WALLET:
                         if(!integrationService.beneficiaryHasWallet(beneficiaryResponse.getId())){
-                            return utils.buildFailedTransactionResponse(reference,"Beneficiary needs wallet account");
+                            // TODO : create wallet
+                            ClientResponse wallet = integrationService.createWalletClient(beneficiaryResponse);
+                            beneficiaryResponse.setWalletClient(wallet.getId());
+                            fundTransferRestClient.saveOrUpdateClient(wallet);
                         }
-                        else {
                             double amountToBeAdded = transactionEntity.getWhoPayFees().equals("Donor") ? feesCalculationService.calculFraisDonneurOrdre(transactionEntity.getAmount(),
                                     transactionEntity.getFraisTransfert(),
                                     transactionEntity.isNotificationFees()).get("montantTransferer"):
@@ -59,7 +64,6 @@ public class TransferValidationService {
                                             transactionEntity.getFraisTransfert(),
                                             transactionEntity.isNotificationFees()).get("montantTransferer"));
                             integrationService.updateClientCredits(beneficiaryResponse.getWalletClient(),amountToBeAdded, "increment");
-                        }
                         break;
                     case CASH:
                         if(!integrationService.updateAgentCredits(transactionEntity.getAgentId(),transactionEntity.getAmount(),"decrement")){

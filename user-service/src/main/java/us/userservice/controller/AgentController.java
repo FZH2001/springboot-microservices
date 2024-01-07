@@ -74,21 +74,32 @@ public class AgentController {
     }
 
     @PutMapping("/client/{id}")
-    public ResponseEntity<String> updateClient(@RequestBody Client client, @PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> updateClient(@RequestBody Client client, @PathVariable Long id) {
         try {
             agentService.updateClient(client, id);
-            return new ResponseEntity<>("Client updated successfully", HttpStatus.OK);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Client updated successfully");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Client not found");
+
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred while updating the client", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Internal server error");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);        }
     }
 
     @DeleteMapping("/client/{id}")
-    public ResponseEntity<String> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> deleteClient(@PathVariable Long id) {
         agentService.deleteClient(id);
-        return new ResponseEntity<>("Client deleted successfully", HttpStatus.OK);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Client deleted successfully");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PutMapping("/update-agent-solde/{id}")
     public ResponseEntity<String> updateAgentSolde(@PathVariable Long id, @RequestParam Double newSolde) {

@@ -59,5 +59,9 @@ public class ClientController {
         clientService.saveOrUpdateClient(client);
         return new ResponseEntity<>("Client saved or updated successfully", HttpStatus.CREATED);
     }
+    @GetMapping("/get-client/{cin}")
+    public Client getClientByCIN(@PathVariable("cin") String cin){
+        return clientService.findClientByCIN(cin);
+    }
 
 }

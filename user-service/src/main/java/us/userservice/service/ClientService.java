@@ -14,6 +14,7 @@ import us.userservice.repository.ClientRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Data
@@ -142,5 +143,11 @@ public class ClientService {
         return "SUCCESS";
     }
 
+    public Client findClientByCIN(String cin){
+
+        Optional<Client> client=clientRepository.findByNumeroPieceIdentite(cin);
+        return client.orElse(null);
+
+    }
 
 }
