@@ -15,7 +15,6 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
 public class ClientController {
     private final ClientService clientService;
 
