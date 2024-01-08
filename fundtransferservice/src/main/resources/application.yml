@@ -4,12 +4,15 @@ spring:
   application:
     name: transfer-service
   datasource:
-    url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
+#    url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
+    url : jdbc:h2:mem:fund-service
+    driver-class-name : org.h2.Driver
     username: root
-    password: Massaq51354
+    password: 1234
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 eureka:
   client:
     service-url:

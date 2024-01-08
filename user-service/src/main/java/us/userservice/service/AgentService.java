@@ -8,6 +8,8 @@ import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Client;
 import us.userservice.repository.AgentRepository;
 import us.userservice.repository.ClientRepository;
+import us.userservice.user.User;
+import us.userservice.user.UserRestAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 public class AgentService {
     private final AgentRepository agentRepository;
     private final ClientRepository clientRepository;
+    private final UserRestAPI userRestAPI;
 
     public List<Client> getAllClients() {
         return clientRepository.findAll();
@@ -61,5 +64,11 @@ public class AgentService {
         } else {
             throw new EntityNotFoundException("Agent not found with ID: " + agentId);
         }
+    }
+
+    public void addAgent(Agent agent){
+        User user=new User(agent.getPrenom(),agent.getNom(),agent.getEmail(), agent.getPassword());
+        userRestAPI.createUser(user);
+        agentRepository.save(agent);
     }
 }

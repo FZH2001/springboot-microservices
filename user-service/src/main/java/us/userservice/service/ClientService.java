@@ -3,6 +3,7 @@ package us.userservice.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.userservice.model.entity.Agent;
 import us.userservice.model.entity.Beneficiaire;
@@ -10,6 +11,8 @@ import us.userservice.model.entity.Client;
 import us.userservice.repository.AgentRepository;
 import us.userservice.repository.BeneficiaireRepository;
 import us.userservice.repository.ClientRepository;
+import us.userservice.user.User;
+import us.userservice.user.UserRestAPI;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @Data
 @AllArgsConstructor
 public class ClientService {
@@ -25,6 +29,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final BeneficiaireRepository beneficiaireRepository;
     private final AgentRepository agentRepository;
+    private final UserRestAPI userRestAPI;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     public Client saveBeneficiaireClient(Client c,Long benId){
@@ -42,6 +47,8 @@ public class ClientService {
 
 
     public Client updateClient(Client c){
+        User user=new User(c.getPrenom(),c.getTitle(),c.getEmail(),c.getPassword());
+        userRestAPI.createUser(user);
         return clientRepository.saveAndFlush(c);
     }
 
@@ -72,6 +79,8 @@ public class ClientService {
         }
     }
     public void saveOrUpdateClient(Client client) {
+        User user=new User(client.getPrenom(),client.getTitle(),client.getEmail(),client.getPassword());
+        userRestAPI.createUser(user);
         clientRepository.save(client);
     }
 
@@ -148,6 +157,9 @@ public class ClientService {
         Optional<Client> client=clientRepository.findByNumeroPieceIdentite(cin);
         return client.orElse(null);
 
+    }
+    public Client getClientByEmail(String email){
+        return clientRepository.findClientByEmail(email).orElse(null);
     }
 
 }

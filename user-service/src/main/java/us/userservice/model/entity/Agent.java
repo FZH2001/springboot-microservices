@@ -14,6 +14,8 @@ public class Agent{
     private String nom;
     private String prenom;
     private String email;
+    private String password;
+
     private String phone;
     private Double solde;
 

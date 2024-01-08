@@ -32,6 +32,8 @@ public class Client {
     private String ville;
     private String gsm;
     private String email;
+    private String password;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Agent agent;
