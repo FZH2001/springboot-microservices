@@ -26,6 +26,15 @@ public class AgentController {
     public ResponseEntity<Agent> getAgentData(@PathVariable Long id){
         return new ResponseEntity<>(agentService.getAgentData(id),HttpStatus.OK);
     }
+    @PostMapping("/add-client/{benId}")
+    public ResponseEntity<Object> createAgent(@RequestBody Agent agent){
+        try{
+            agentService.createAgent(agent);
+        return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error : "+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     //Warning : This is not tested yet
     @PutMapping("/update-data")
     public ResponseEntity<String> updateAgentData(@RequestBody Agent a){

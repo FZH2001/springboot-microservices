@@ -66,7 +66,7 @@ public class AgentService {
         }
     }
 
-    public void addAgent(Agent agent){
+    public void createAgent(Agent agent){
         User user=new User(agent.getPrenom(),agent.getNom(),agent.getEmail(), agent.getPassword());
         userRestAPI.createUser(user);
         agentRepository.save(agent);
