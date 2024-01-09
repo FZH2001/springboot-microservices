@@ -71,4 +71,8 @@ public class AgentService {
         userRestAPI.createUser(user);
         agentRepository.save(agent);
     }
+
+    public Agent getAgentByEmail(String email) {
+        return agentRepository.findAgentByEmail(email).orElse(null);
+    }
 }
