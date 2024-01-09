@@ -28,6 +28,12 @@ public class TransactionController {
     private final TransferReverseService transferReverseService;
     private final TransferValidationService transferValidationService;
     private final NotificationService smsService;
+
+    @GetMapping("/{donorId}")
+    public ResponseEntity<List<TransactionResponse>> getTransactionsByDonorId(@PathVariable Long donorId) {
+        log.info("Reading fund transfers from core");
+        return ResponseEntity.ok(transferSearchService.getAllTransactionsById(donorId));
+    }
     @GetMapping
     public ResponseEntity<List<TransactionResponse>> readFundTransfers() {
         log.info("Reading fund transfers from core");

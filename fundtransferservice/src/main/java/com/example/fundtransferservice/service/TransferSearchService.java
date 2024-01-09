@@ -67,6 +67,25 @@ public class TransferSearchService {
         log.error("Code is invalid");
         return utils.buildFailedTransactionResponse(reference,"Code is invalid");
     }
+
+    public List<TransactionResponse> getAllTransactionsById(Long donorId) {
+        List<Transaction> transactions = mapper.convertToDtoList(transactionRepository.findByDonorId(donorId));
+        List<TransactionResponse> transactionResponses = new ArrayList<>();
+        for (Transaction transaction:transactions) {
+            ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transaction.getDonorId());
+            clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+            transaction.setClientResponse(clientResponse);
+            // add beneficiary information to the transaction
+            transaction.setBeneficiaryResponse(fundTransferRestClient.getBeneficiaryInfo(transaction.getBeneficiaryId()));
+            TransactionResponse transactionResponse = new TransactionResponse();
+            transactionResponse.setTransaction(transaction);
+            transactionResponse.setTransactionId(transaction.getTransactionReference());
+            transactionResponse.setMessage("Success");
+            transactionResponses.add(transactionResponse);
+        }
+
+        return transactionResponses;
+}
     // Build a successful transaction response
 
 

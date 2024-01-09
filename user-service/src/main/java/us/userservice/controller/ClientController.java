@@ -37,6 +37,7 @@ public class ClientController {
     @PostMapping("/beneficiaire/{clientId}")
     public Beneficiaire createBeneficiaire(@RequestBody Beneficiaire b,@PathVariable Long clientId) { return clientService.createBeneficiaire(b,clientId);}
 
+
     @GetMapping("/beneficiaire/search")
     public List<Beneficiaire> searchBeneficiaire(@RequestParam String term){ return clientService.searchBeneficiaireByTerm(term); }
 
