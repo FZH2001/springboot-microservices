@@ -160,8 +160,9 @@ public class ClientService {
             clientRepository.flush();
             Client client = clientRepository.findByPrenom("Hamza").orElse(null);
             Beneficiaire b1 = new Beneficiaire(null,"ELGARAI","Karim","karimeg@yahoo.fr","0632579630",false,"hxxx23",client,null);
-            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail..com","0735903682",false,"xx34rr",client,null);
-            beneficiaireRepository.saveAllAndFlush(List.of(b1,b2));
+            Beneficiaire b2 = new Beneficiaire(null,"IRAOUI","Ahmed","ahmediraoui@gmail.com","0735903682",false,"xx34rr",client,null);
+            Beneficiaire b3 = new Beneficiaire(null,"EL HICHAMI","Fatima Zahra","fzh2001@gmail.com","0620308602",false,"bb35et",client,null);
+            beneficiaireRepository.saveAllAndFlush(List.of(b1,b2,b3));
 
 
         }catch (Exception e){

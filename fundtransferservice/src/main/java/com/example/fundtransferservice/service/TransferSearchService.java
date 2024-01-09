@@ -73,7 +73,9 @@ public class TransferSearchService {
         List<TransactionResponse> transactionResponses = new ArrayList<>();
         for (Transaction transaction:transactions) {
             ClientResponse clientResponse = fundTransferRestClient.getClientInfo(transaction.getDonorId());
-            clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+            if(transaction.getAgentId()!=null){
+                clientResponse.setAgentResponse(fundTransferRestClient.getAgentInfo(transaction.getAgentId()));
+            }
             transaction.setClientResponse(clientResponse);
             // add beneficiary information to the transaction
             transaction.setBeneficiaryResponse(fundTransferRestClient.getBeneficiaryInfo(transaction.getBeneficiaryId()));
