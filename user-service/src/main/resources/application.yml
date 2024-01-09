@@ -1,6 +1,6 @@
 
 server:
-  port: 8111
+  port: 8011
 spring:
   application:
     name: user-service
@@ -10,7 +10,7 @@ spring:
         create-drop
   datasource:
     url:
-      jdbc:mysql://35.223.17.143/user_service_ms
+      jdbc:mysql://35.223.17.143:3306/auth_service_ms
     username:
       root
     password:
@@ -19,15 +19,16 @@ spring:
 
 
 
+
+
+
 eureka:
-  instance:
-    prefer-ip-address: true
-    hostname: eureka-0
   client:
     service-url:
-      defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8761/eureka
+      defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+    enabled: true
 
 
 

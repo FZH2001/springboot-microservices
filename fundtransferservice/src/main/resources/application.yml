@@ -4,7 +4,7 @@ spring:
   application:
     name: transfer-service
   datasource:
-    url: jdbc:mysql://35.223.17.143/banking_core_fund_transfer_service
+    url: jdbc:mysql://35.223.17.143:3306/banking_core_fund_transfer_service
 
     username: root
     password: ismail
