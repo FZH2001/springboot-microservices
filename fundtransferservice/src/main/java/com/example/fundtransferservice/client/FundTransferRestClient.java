@@ -44,6 +44,6 @@ public interface FundTransferRestClient {
     ResponseEntity<String> createBeneficiary(@RequestBody BeneficiaryResponse beneficiaryResponse);
     @RequestMapping(method = RequestMethod.POST, value = "/api/agents/add-client/{benId}")
     ResponseEntity<Object> createBeneficiaireClient(@PathVariable Long benId,@RequestBody ClientResponse c);
-    @RequestMapping(method = RequestMethod.POST, value = "/add-client")
+    @RequestMapping(method = RequestMethod.POST, value = "/api/client/add-client")
     ResponseEntity<String> saveOrUpdateClient(@RequestBody ClientResponse client);
 }

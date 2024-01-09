@@ -33,7 +33,7 @@ public class TransferReverseService {
         boolean isSameDay = (issueLocalDate.getDayOfMonth() == today.getDayOfMonth()) &&
                 (issueLocalDate.getMonth() == today.getMonth()) &&
                 (issueLocalDate.getYear() == today.getYear());
-        if(transactionEntity==null || refundMotive.isEmpty() || !transactionEntity.getPaymentType().equals(TransactionType.CASH)){
+        if(transactionEntity==null || refundMotive.isEmpty()){
             log.error("Transfer not found or motive is empty");
             return utils.buildFailedTransactionResponse(referenceCode,"transfer not found or motive is empty");
         }

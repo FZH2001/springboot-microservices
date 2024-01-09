@@ -96,6 +96,7 @@ public class ClientService {
                     .profession("Etudiant")
                     .paysEmissionPieceIdentite("Maroc")
                     .numeroPieceIdentite("EE930320")
+                    .solde(2500.0)
                     .build();
             Client c2 = Client.builder()
                     .title("EL OMRANI")
@@ -112,6 +113,7 @@ public class ClientService {
                     .profession("Etudiante")
                     .paysEmissionPieceIdentite("Maroc")
                     .numeroPieceIdentite("OO35930")
+                    .solde(6500.0)
                     .build();
             Client c3 = Client.builder()
                     .title("HAMDANI")
@@ -128,6 +130,7 @@ public class ClientService {
                     .profession("Etudiant")
                     .paysEmissionPieceIdentite("Maroc")
                     .numeroPieceIdentite("GG35692")
+                    .solde(4320.50)
                     .build();
             clientRepository.saveAll(List.of(c1,c2,c3));
             clientRepository.flush();

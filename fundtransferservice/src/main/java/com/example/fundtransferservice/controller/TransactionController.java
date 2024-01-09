@@ -34,7 +34,7 @@ public class TransactionController {
         return ResponseEntity.ok(transferSearchService.readAllTransfers());
     }
     // TODO : send and verify OTP
-    @GetMapping("/agent/validate/{transactionReference}")
+    @PostMapping("/agent/validate/{transactionReference}")
     public ResponseEntity<TransactionResponse> validatePayment(@PathVariable String transactionReference,@RequestBody String otp){
         return ResponseEntity.ok(transferValidationService.validatePayment(transactionReference,otp));
     }

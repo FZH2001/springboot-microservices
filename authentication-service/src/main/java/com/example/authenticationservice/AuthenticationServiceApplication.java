@@ -3,6 +3,7 @@ package com.example.authenticationservice;
 import com.example.authenticationservice.model.Role;
 import com.example.authenticationservice.model.User;
 import com.example.authenticationservice.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,9 +14,10 @@ import java.util.Optional;
 
 @EnableDiscoveryClient
 @SpringBootApplication
+@AllArgsConstructor
 public class AuthenticationServiceApplication implements CommandLineRunner {
-	@Autowired
-	private UserRepository userRepository;
+
+	private final UserRepository userRepository;
 
 	public static void main(String[] args) {
 
