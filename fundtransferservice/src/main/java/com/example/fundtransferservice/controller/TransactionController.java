@@ -20,7 +20,8 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200","https://main--remarkable-starlight-5f7dc0.netlify.app","https://main--unique-moxie-e9385c.netlify.app/"})
+@CrossOrigin(origins = {"http://localhost:4200","https://main--remarkable-starlight-5f7dc0.netlify.app","https://main--unique-moxie-e9385c.netlify.app/","https://659d28735cac669fa793e38d--chic-mousse-aa1b3d.netlify.app/"})
+
 @RequestMapping("/api/v1/transaction")
 public class TransactionController {
     private final TransferSearchService transferSearchService;
@@ -28,6 +29,7 @@ public class TransactionController {
     private final TransferReverseService transferReverseService;
     private final TransferValidationService transferValidationService;
     private final NotificationService smsService;
+    private final TransferAdminService transferAdminService;
 
     @GetMapping("/{donorId}")
     public ResponseEntity<List<TransactionResponse>> getTransactionsByDonorId(@PathVariable Long donorId) {
@@ -96,5 +98,13 @@ public class TransactionController {
     public ResponseEntity<TransactionResponse> restituerTransaction(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.validateRestitution(transactionRequest));
+    }
+    @PostMapping("/agent/block")
+    public ResponseEntity<TransactionResponse> blockTransaction(@RequestBody Map<String, String> requestParams){
+        return ResponseEntity.ok(transferAdminService.blockTransaction(requestParams.get("reference")));
+    }
+    @PostMapping("/agent/unblock")
+    public ResponseEntity<TransactionResponse> unblockTransaction(@RequestBody Map<String, String> requestParams){
+        return ResponseEntity.ok(transferAdminService.unblockTransaction(requestParams.get("reference")));
     }
 }
