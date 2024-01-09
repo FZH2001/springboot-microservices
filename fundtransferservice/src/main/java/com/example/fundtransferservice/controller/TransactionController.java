@@ -28,6 +28,7 @@ public class TransactionController {
     private final TransferReverseService transferReverseService;
     private final TransferValidationService transferValidationService;
     private final NotificationService smsService;
+    private final TransferAdminService transferAdminService;
 
     @GetMapping("/{donorId}")
     public ResponseEntity<List<TransactionResponse>> getTransactionsByDonorId(@PathVariable Long donorId) {
@@ -96,5 +97,13 @@ public class TransactionController {
     public ResponseEntity<TransactionResponse> restituerTransaction(@RequestBody TransactionRequest transactionRequest) {
         log.info("Got fund transfer request from API {}", transactionRequest.toString());
         return ResponseEntity.ok(transferService.validateRestitution(transactionRequest));
+    }
+    @PostMapping("/agent/block")
+    public ResponseEntity<TransactionResponse> blockTransaction(@RequestBody Map<String, String> requestParams){
+        return ResponseEntity.ok(transferAdminService.blockTransaction(requestParams.get("reference")));
+    }
+    @PostMapping("/agent/unblock")
+    public ResponseEntity<TransactionResponse> unblockTransaction(@RequestBody Map<String, String> requestParams){
+        return ResponseEntity.ok(transferAdminService.unblockTransaction(requestParams.get("reference")));
     }
 }
