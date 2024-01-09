@@ -99,17 +99,17 @@ public class TransferService {
 
         else{
             // ? : if the notify is true then we send SMS to the beneficiary
-            /*if(transactionEntity.isNotify()){
+            if(transactionEntity.isNotify()){
                 // TODO : send SMS to the beneficiary
                 sendTransactionReferenceToBeneficiary(transactionEntity);
-            }*/
+            }
 
             // ? : if the amount is valid then we proceed with Fees calculation
             feesCalculation(transactionEntity);
 
             // ? : we send an OTP to the client and to the Front
             String otp = generateOTP(6);
-            /*sendOTP(transactionEntity,otp);*/
+//            sendOTP(transactionEntity.getDonorId(),otp);
 
             // ? : we set the transaction status to TO_BE_SERVED
             transactionEntity.setStatus(TransactionStatus.TO_BE_SERVED);
@@ -129,7 +129,7 @@ public class TransferService {
             // ? : we save the transaction in the database
             transactionRepository.save(transactionEntity);
             response=utils.buildSuccessfulTransactionResponse(transactionEntity);
-            response.setGeneratedOTP(otp);
+//            response.setGeneratedOTP(otp);
         }
 
         return response;
@@ -174,9 +174,9 @@ public class TransferService {
             }
 
             //? we notify the client that the transaction has been refunded
-            /*if(transactionEntity.isNotify()){
+            if(transactionEntity.isNotify()){
                 notifyClientWithRestitution(transactionToBeRestituted);
-            }*/
+            }
             transactionRepository.save(transactionToBeRestituted);
             response  = utils.buildSuccessfulTransactionResponse(transactionToBeRestituted);
         }else {
@@ -205,6 +205,13 @@ public class TransferService {
             otp.append(ThreadLocalRandom.current().nextInt(0, 10));
         }
         return otp.toString();
+    }
+
+    public void sendOTP(Long clientId, String otp){
+        // TODO : send OTP to the client
+        System.out.println("I am sending OTP to the client");
+        smsService.sendSMStoClient(new SMSRequest(fundTransferRestClient.getClientInfo(clientId).getGsm(),otp,fundTransferRestClient.getClientInfo(clientId).getPrenom()));
+
     }
 
     public void feesCalculation(TransactionEntity entity){
