@@ -64,4 +64,11 @@ public class ClientController {
         return clientService.findClientByCIN(cin);
     }
 
+    @GetMapping("/getClientByEmail/{email}")
+    public Client getClientByEmail(@PathVariable("email") String email){
+        return clientService.getClientByEmail(email);
+    }
+
+
+
 }

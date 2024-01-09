@@ -5,6 +5,7 @@ spring:
     name: transfer-service
   datasource:
     url: jdbc:mysql://localhost:3306/banking_core_fund_transfer_service
+
     username: root
     password: Massaq51354
     driver-class-name: com.mysql.cj.jdbc.Driver
