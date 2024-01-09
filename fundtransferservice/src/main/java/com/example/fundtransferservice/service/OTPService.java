@@ -34,7 +34,7 @@ public class OTPService {
         otpEntity.setOtpValue(otp.toString());
         otpRepository.save(otpEntity);
 
-        //sendOTP(clientId,otpEntity.getOtp());
+        sendOTP(clientId,otpEntity.getOtpValue());
         return otpEntity.getOtpValue();
 
     }
