@@ -87,8 +87,12 @@ public class ClientService {
 
     public String loadData(){
         try {
-            Agent a1 = new Agent(null,"Atlas","Abdelghafour","atlas@gmail.com","0600225588",5000.00);
-            Agent a2 = new Agent(null,"Bekkari","Aissam","bekkari@gmail.com","0633336666",5555.00);
+            Agent a1 = new Agent(null,"Atlas","Abdelghafour","atlas@gmail.com","12345678","0600225588",5000.00);
+            Agent a2 = new Agent(null,"Bekkari","Aissam","bekkari@gmail.com","12345678","0633336666",5555.00);
+            User user=new User(a1.getPrenom(),a1.getNom(),a1.getEmail(),a1.getPassword());
+            userRestAPI.createUser(user);
+            User user1=new User(a1.getPrenom(),a1.getNom(),a1.getEmail(),a1.getPassword());
+            userRestAPI.createUser(user1);
             agentRepository.saveAllAndFlush(List.of(a1,a2));
             Client c1 = Client.builder()
                     .gsm("0634348550")
@@ -99,6 +103,7 @@ public class ClientService {
                     .typePieceIdentite("CIN")
                     .prenom("Hamza")
                     .title("ELGARAI")
+                    .password("12345678")
                     .paysNationalite("Marocain")
                     .ville("Marrakech")
                     .expirationPieceIdentite(sdf.parse("01-01-2026"))
@@ -111,6 +116,7 @@ public class ClientService {
                     .prenom("Hanae")
                     .gsm("0620359862")
                     .email("hanaeelomrani@gmail.com")
+                    .password("12345678")
                     .dateNaissance(sdf.parse("29-03-2001"))
                     .adresseLegale("Marrakech")
                     .paysAdresse("Marrakech, Maroc")
@@ -127,6 +133,7 @@ public class ClientService {
                     .prenom("Mohamed")
                     .gsm("0732016830")
                     .email("hamdanimee@gmail.com")
+                    .password("12345678")
                     .dateNaissance(sdf.parse("15-08-2001"))
                     .adresseLegale("Anza, Agadir, Marrakech")
                     .paysAdresse("Marrakech, Maroc")
@@ -138,6 +145,14 @@ public class ClientService {
                     .paysEmissionPieceIdentite("Maroc")
                     .numeroPieceIdentite("GG35692")
                     .build();
+
+            User user3=new User(c1.getPrenom(),c1.getTitle(),c1.getEmail(),c1.getPassword());
+            userRestAPI.createUser(user3);
+            User user4=new User(c2.getPrenom(),c2.getTitle(),c2.getEmail(),c2.getPassword());
+            userRestAPI.createUser(user4);
+            User user5=new User(c3.getPrenom(),c3.getTitle(),c3.getEmail(),c3.getPassword());
+            userRestAPI.createUser(user5);
+
             clientRepository.saveAll(List.of(c1,c2,c3));
             clientRepository.flush();
             Client client = clientRepository.findByPrenom("Hamza").orElse(null);

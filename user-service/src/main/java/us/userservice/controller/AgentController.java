@@ -26,7 +26,7 @@ public class AgentController {
     public ResponseEntity<Agent> getAgentData(@PathVariable Long id){
         return new ResponseEntity<>(agentService.getAgentData(id),HttpStatus.OK);
     }
-    @PostMapping("/add-client/{benId}")
+    @PostMapping("/createAgent")
     public ResponseEntity<Object> createAgent(@RequestBody Agent agent){
         try{
             agentService.createAgent(agent);
